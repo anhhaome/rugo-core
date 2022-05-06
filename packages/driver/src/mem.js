@@ -1,20 +1,11 @@
 import { join } from 'path';
 
 import { Low, JSONFile } from 'lowdb';
-import { curry, find, propEq, whereEq, count, keys, compose, descend, prop, ascend, sortWith, drop, take, pipe, curryN, filter, map, forEach, length } from 'ramda';
+import { curry, prop, curryN } from 'ramda';
+import { BaseCollection } from 'rugo-common';
 
 import createMemoizeWith from './memoize.js';
-
-import { CACHE_MEM_KEY, DRIVER, COLLECTION, DEFAULT_LIMIT } from './constants.js';
-import generateId from './id.js';
-
-/**
- * Generate id or check.
- *
- * @param {*} id Id to check. Optional.
- * @returns {*} Checked Id or a new ID.
- */
-const doId = id => id || generateId();
+import { CACHE_MEM_KEY, DRIVER } from './constants.js';
 
 /**
  * Create a new document
@@ -25,17 +16,8 @@ const doId = id => id || generateId();
  * @returns {Document} A created document.
  */
 const doCreate = async (db, doc) => {
-  const newDoc = {
-    // basic info
-    _id: doId(),
-
-    // document
-    ...doc
-  };
-
-  db.data.push(newDoc);
+  const newDoc = await BaseCollection.create(db.data, doc);
   await db.write();
-
   return newDoc;
 };
 
@@ -46,9 +28,7 @@ const doCreate = async (db, doc) => {
  * @param {*} id Id of document need to find.
  * @returns {Document} Document needed.
  */
-const doGet = (db, id) => {
-  return find(propEq('_id', id))(db.data);
-};
+const doGet = (db, id) => BaseCollection.get(db.data, id);
 
 /**
  * Count document by query.
@@ -57,9 +37,7 @@ const doGet = (db, id) => {
  * @param {object} query Match exact query object.
  * @returns {number} Count.
  */
-const doCount = (db, query) => {
-  return count(whereEq(query))(db.data);
-};
+const doCount = (db, query) => BaseCollection.count(db.data, query);
 
 /**
  * List documents.
@@ -69,32 +47,7 @@ const doCount = (db, query) => {
  * @param {object} controls Control list result, maybe contains: $limit, $sort, $skip
  * @returns {object} List result, contains: total (total of query result), skip (no skip documents), limit (no limit documents), data (list document).
  */
-const doList = (db, query, controls = {}) => {
-  const pipeline = [filter(whereEq(query))];
-
-  if (controls.$sort) {
-    pipeline.push(
-      sortWith(
-        compose(
-          map(k => controls.$sort[k] === -1 ? descend(prop(k)) : ascend(prop(k))),
-          keys
-        )(controls.$sort)
-      )
-    );
-  }
-
-  if (controls.$skip) { pipeline.push(drop(controls.$skip)); }
-
-  const limit = typeof controls.$limit === 'number' ? controls.$limit : DEFAULT_LIMIT;
-  if (limit !== -1) { pipeline.push(take(limit)); }
-
-  return {
-    total: doCount(db, query),
-    skip: controls.$skip || 0,
-    limit,
-    data: pipe(...pipeline)(db.data)
-  };
-};
+const doList = (db, query, controls = {}) => BaseCollection.list(db.data, query, controls);
 
 /**
  * Patch documents.
@@ -106,30 +59,7 @@ const doList = (db, query, controls = {}) => {
  * @returns {number} No of changed documents.
  */
 const doPatch = async (db, query, controls = {}) => {
-  const pipeline = [filter(whereEq(query))];
-
-  if (controls.$set) {
-    pipeline.push(
-      forEach(doc => {
-        for (const key in controls.$set) {
-          doc[key] = controls.$set[key];
-        }
-      })
-    );
-  }
-
-  if (controls.$inc) {
-    pipeline.push(
-      forEach(doc => {
-        for (const key in controls.$inc) {
-          if (typeof doc[key] === 'number') { doc[key] += controls.$inc[key]; }
-        }
-      })
-    );
-  }
-
-  pipeline.push(length);
-  const result = pipe(...pipeline)(db.data);
+  const result = await BaseCollection.patch(db.data, query, controls);
   await db.write();
 
   return result;
@@ -143,20 +73,7 @@ const doPatch = async (db, query, controls = {}) => {
  * @returns {number} No removed document.
  */
 const doRemove = async (db, query) => {
-  const pred = whereEq(query);
-
-  let index = 0;
-  let result = 0;
-  while (index < db.data.length) {
-    if (pred(db.data[index])) {
-      db.data.splice(index, 1);
-      result++;
-      continue;
-    }
-
-    index++;
-  }
-
+  const result = await BaseCollection.remove(db.data, query);
   await db.write();
 
   return result;
@@ -182,9 +99,8 @@ const getCollection = async (root, name) => {
   await db.write();
 
   return {
-    ...COLLECTION,
+    ...BaseCollection,
 
-    id: doId,
     create: curry(doCreate)(db),
     get: curry(doGet)(db),
     count: curry(doCount)(db),

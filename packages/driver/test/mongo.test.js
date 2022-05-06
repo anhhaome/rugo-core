@@ -3,9 +3,10 @@
 import { join } from 'path';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { CACHE_MONGO_KEY, DEFAULT_LIMIT, DRIVER } from '../src/constants.js';
+import { CACHE_MONGO_KEY, DRIVER } from '../src/constants.js';
 import { globalCaches } from '../src/memoize.js';
 import createMongoDriver from '../src/mongo.js';
+import { DEFAULT_LIMIT } from 'rugo-common';
 
 const DEMO_COLLECTION_NAME = 'demo';
 const SAMPLE_DOCUMENT = { foo: 'bar' };

@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "lint": "npm run lint:fix",
     "test": "mocha",
-    "coverage": "c8 npm run test"
+    "coverage": "c8 npm run test",
+    "pre-commit": "npm run lint && npm run coverage && npm run doc"
   },
   "author": "Vu Anh Hao <hi@anhhao.me> (https://www.anhhao.me)",
   "license": "MIT",
@@ -31,6 +32,7 @@
     "mime": "^3.0.0",
     "mongodb": "^4.6.0",
     "nanoid": "^3.3.4",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "rugo-common": "../common"
   }
 }

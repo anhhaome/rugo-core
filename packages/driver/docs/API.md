@@ -27,10 +27,10 @@
 <dt><a href="#doId">doId(id)</a> ⇒ <code>*</code></dt>
 <dd><p>Generate id or check.</p>
 </dd>
-<dt><a href="#doGet">doGet(root, id)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doGet">doGet(root, id)</a> ⇒ <code>Document</code></dt>
 <dd><p>Get a document.</p>
 </dd>
-<dt><a href="#doCreate">doCreate(root, doc)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doCreate">doCreate(root, doc)</a> ⇒ <code>Document</code></dt>
 <dd><p>Create a file or directory</p>
 </dd>
 <dt><a href="#listByQuery">listByQuery(root, query)</a> ⇒ <code>Array</code></dt>
@@ -45,29 +45,17 @@
 <dt><a href="#doRemove">doRemove(root, query)</a> ⇒ <code>number</code></dt>
 <dd><p>Remove documents</p>
 </dd>
-<dt><a href="#getCollection">getCollection(root, name)</a> ⇒ <code><a href="#Collection">Collection</a></code></dt>
+<dt><a href="#getCollection">getCollection(root, name)</a> ⇒ <code>Collection</code></dt>
 <dd><p>Get collection for data processing.</p>
 </dd>
 <dt><a href="#createFsDriver">createFsDriver(config)</a> ⇒ <code><a href="#Driver">Driver</a></code></dt>
 <dd><p>Fs Driver is a driver store and manage file system.</p>
 <p>This function create Fs Driver for use.</p>
 </dd>
-<dt><a href="#align">align(origin, max, character)</a> ⇒ <code>string</code></dt>
-<dd><p>Add prefix to origin text.</p>
-</dd>
-<dt><a href="#now">now()</a> ⇒ <code>number</code></dt>
-<dd><p>Get unique now time.</p>
-</dd>
-<dt><a href="#generateId">generateId()</a> ⇒ <code>string</code></dt>
-<dd><p>Generate unique id.</p>
-</dd>
-<dt><a href="#doId">doId(id)</a> ⇒ <code>*</code></dt>
-<dd><p>Generate id or check.</p>
-</dd>
-<dt><a href="#doCreate">doCreate(db, doc)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doCreate">doCreate(db, doc)</a> ⇒ <code>Document</code></dt>
 <dd><p>Create a new document</p>
 </dd>
-<dt><a href="#doGet">doGet(db, id)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doGet">doGet(db, id)</a> ⇒ <code>Document</code></dt>
 <dd><p>Get a document by id.</p>
 </dd>
 <dt><a href="#doCount">doCount(db, query)</a> ⇒ <code>number</code></dt>
@@ -82,7 +70,7 @@
 <dt><a href="#doRemove">doRemove(db, query)</a> ⇒ <code>number</code></dt>
 <dd><p>Remove documents</p>
 </dd>
-<dt><a href="#getCollection">getCollection(root, name)</a> ⇒ <code><a href="#Collection">Collection</a></code></dt>
+<dt><a href="#getCollection">getCollection(root, name)</a> ⇒ <code>Collection</code></dt>
 <dd><p>Get collection for data processing. Each collection is stored with one file.</p>
 </dd>
 <dt><a href="#createMemDriver">createMemDriver(config)</a> ⇒ <code><a href="#Driver">Driver</a></code></dt>
@@ -106,10 +94,10 @@ or if tracking references, memory leaks and mutating arguments.</p>
 <dt><a href="#getDatabase">getDatabase(uri)</a> ⇒ <code><a href="#MongoInstance">MongoInstance</a></code></dt>
 <dd><p>Get MongoDB instance.</p>
 </dd>
-<dt><a href="#doCreate">doCreate(collection, doc)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doCreate">doCreate(collection, doc)</a> ⇒ <code>Document</code></dt>
 <dd><p>Create a new document</p>
 </dd>
-<dt><a href="#doGet">doGet(collection, id)</a> ⇒ <code><a href="#Document">Document</a></code></dt>
+<dt><a href="#doGet">doGet(collection, id)</a> ⇒ <code>Document</code></dt>
 <dd><p>Get a document by id.</p>
 </dd>
 <dt><a href="#doCount">doCount(collection, query)</a> ⇒ <code>number</code></dt>
@@ -124,7 +112,7 @@ or if tracking references, memory leaks and mutating arguments.</p>
 <dt><a href="#doRemove">doRemove(collection, query)</a> ⇒ <code>number</code></dt>
 <dd><p>Remove documents</p>
 </dd>
-<dt><a href="#getCollection">getCollection(ins, name)</a> ⇒ <code><a href="#Collection">Collection</a></code></dt>
+<dt><a href="#getCollection">getCollection(ins, name)</a> ⇒ <code>Collection</code></dt>
 <dd><p>Get collection for data processing.</p>
 </dd>
 <dt><a href="#createMongoDriver">createMongoDriver(config)</a> ⇒ <code><a href="#Driver">Driver</a></code></dt>
@@ -136,14 +124,8 @@ or if tracking references, memory leaks and mutating arguments.</p>
 ## Typedefs
 
 <dl>
-<dt><a href="#Document">Document</a> : <code>object</code></dt>
-<dd><p>Document structure.</p>
-</dd>
 <dt><a href="#Driver">Driver</a> : <code>object</code></dt>
 <dd><p>Driver structure.</p>
-</dd>
-<dt><a href="#Collection">Collection</a> : <code>object</code></dt>
-<dd><p>Collection structure.</p>
 </dd>
 <dt><a href="#MongoInstance">MongoInstance</a> : <code>object</code></dt>
 <dd></dd>
@@ -238,11 +220,11 @@ Generate id or check.
 
 <a name="doGet"></a>
 
-## doGet(root, id) ⇒ [<code>Document</code>](#Document)
+## doGet(root, id) ⇒ <code>Document</code>
 Get a document.
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - Result, doc information.  
+**Returns**: <code>Document</code> - Result, doc information.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -251,16 +233,16 @@ Get a document.
 
 <a name="doCreate"></a>
 
-## doCreate(root, doc) ⇒ [<code>Document</code>](#Document)
+## doCreate(root, doc) ⇒ <code>Document</code>
 Create a file or directory
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - A created document.  
+**Returns**: <code>Document</code> - A created document.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | root | <code>string</code> | Root directory for handle. Required. |
-| doc | [<code>Document</code>](#Document) | A document to be created. Required. |
+| doc | <code>Document</code> | A document to be created. Required. |
 
 <a name="listByQuery"></a>
 
@@ -317,11 +299,11 @@ Remove documents
 
 <a name="getCollection"></a>
 
-## getCollection(root, name) ⇒ [<code>Collection</code>](#Collection)
+## getCollection(root, name) ⇒ <code>Collection</code>
 Get collection for data processing.
 
 **Kind**: global function  
-**Returns**: [<code>Collection</code>](#Collection) - Collection handlers.  
+**Returns**: <code>Collection</code> - Collection handlers.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -344,66 +326,26 @@ This function create Fs Driver for use.
 | config.root | <code>string</code> | Root directory to store. Required. |
 | config.cache | <code>boolean</code> | Enable cache. Default: `false`. |
 
-<a name="align"></a>
-
-## align(origin, max, character) ⇒ <code>string</code>
-Add prefix to origin text.
-
-**Kind**: global function  
-**Returns**: <code>string</code> - Transformed String.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| origin | <code>string</code> | Origin string. Required. |
-| max | <code>number</code> | Max length of needed string. Required. |
-| character | <code>string</code> | Character to add. Required. |
-
-<a name="now"></a>
-
-## now() ⇒ <code>number</code>
-Get unique now time.
-
-**Kind**: global function  
-**Returns**: <code>number</code> - Now in milisecond.  
-<a name="generateId"></a>
-
-## generateId() ⇒ <code>string</code>
-Generate unique id.
-
-**Kind**: global function  
-**Returns**: <code>string</code> - Id generated  
-<a name="doId"></a>
-
-## doId(id) ⇒ <code>\*</code>
-Generate id or check.
-
-**Kind**: global function  
-**Returns**: <code>\*</code> - Checked Id or a new ID.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>\*</code> | Id to check. Optional. |
-
 <a name="doCreate"></a>
 
-## doCreate(db, doc) ⇒ [<code>Document</code>](#Document)
+## doCreate(db, doc) ⇒ <code>Document</code>
 Create a new document
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - A created document.  
+**Returns**: <code>Document</code> - A created document.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | db | <code>LowDB</code> | LowDB object, for read and write. Required. |
-| doc | [<code>Document</code>](#Document) | A document to be created. Required. |
+| doc | <code>Document</code> | A document to be created. Required. |
 
 <a name="doGet"></a>
 
-## doGet(db, id) ⇒ [<code>Document</code>](#Document)
+## doGet(db, id) ⇒ <code>Document</code>
 Get a document by id.
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - Document needed.  
+**Returns**: <code>Document</code> - Document needed.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -466,11 +408,11 @@ Remove documents
 
 <a name="getCollection"></a>
 
-## getCollection(root, name) ⇒ [<code>Collection</code>](#Collection)
+## getCollection(root, name) ⇒ <code>Collection</code>
 Get collection for data processing. Each collection is stored with one file.
 
 **Kind**: global function  
-**Returns**: [<code>Collection</code>](#Collection) - Collection handlers.  
+**Returns**: <code>Collection</code> - Collection handlers.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -538,11 +480,11 @@ Get MongoDB instance.
 
 <a name="doCreate"></a>
 
-## doCreate(collection, doc) ⇒ [<code>Document</code>](#Document)
+## doCreate(collection, doc) ⇒ <code>Document</code>
 Create a new document
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - A created document.  
+**Returns**: <code>Document</code> - A created document.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -551,11 +493,11 @@ Create a new document
 
 <a name="doGet"></a>
 
-## doGet(collection, id) ⇒ [<code>Document</code>](#Document)
+## doGet(collection, id) ⇒ <code>Document</code>
 Get a document by id.
 
 **Kind**: global function  
-**Returns**: [<code>Document</code>](#Document) - Document needed.  
+**Returns**: <code>Document</code> - Document needed.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -618,11 +560,11 @@ Remove documents
 
 <a name="getCollection"></a>
 
-## getCollection(ins, name) ⇒ [<code>Collection</code>](#Collection)
+## getCollection(ins, name) ⇒ <code>Collection</code>
 Get collection for data processing.
 
 **Kind**: global function  
-**Returns**: [<code>Collection</code>](#Collection) - Collection handlers.  
+**Returns**: <code>Collection</code> - Collection handlers.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -645,18 +587,6 @@ This function create Mongo Driver for use.
 | config.uri | <code>string</code> | Connection URI. |
 | config.cache | <code>boolean</code> | Enable cache. Default: `false`. |
 
-<a name="Document"></a>
-
-## Document : <code>object</code>
-Document structure.
-
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| _id | <code>\*</code> | Id of the document. |
-
 <a name="Driver"></a>
 
 ## Driver : <code>object</code>
@@ -669,24 +599,6 @@ Driver structure.
 | --- | --- | --- |
 | getCollection | <code>function</code> | Default get collection. |
 | close | <code>function</code> | Default close. |
-
-<a name="Collection"></a>
-
-## Collection : <code>object</code>
-Collection structure.
-
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| id | <code>function</code> | check or get id |
-| get | <code>function</code> | Get document by id. |
-| count | <code>function</code> | Count no of document returned. |
-| list | <code>function</code> | List document by query. |
-| create | <code>function</code> | Create a new document. |
-| patch | <code>function</code> | Update existed documents. |
-| remove | <code>function</code> | Remove documents. |
 
 <a name="MongoInstance"></a>
 

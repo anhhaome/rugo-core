@@ -5,13 +5,13 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import { expect } from 'chai';
-
 import rimraf from 'rimraf';
+import { DEFAULT_LIMIT } from 'rugo-common';
 
 import createMemDriver from '../src/mem.js';
 import { globalCaches } from '../src/memoize.js';
 
-import { CACHE_MEM_KEY, DEFAULT_LIMIT, DRIVER } from '../src/constants.js';
+import { CACHE_MEM_KEY, DRIVER } from '../src/constants.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEMO_COLLECTION_NAME = 'demo';
@@ -101,6 +101,10 @@ describe('Mem Driver test', () => {
 
     for (let key in SAMPLE_DOCUMENT)
       expect(doc2).to.has.property(key, SAMPLE_DOCUMENT[key]);
+
+    // no existed get
+    const doc3 = collection.get('noexisted');
+    expect(doc3).to.be.eq(null);
   });
 
   it('should create many document and count query', async () => {

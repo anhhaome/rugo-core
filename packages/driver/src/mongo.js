@@ -2,8 +2,9 @@ import { join } from 'path';
 
 import { clone, curry, curryN, identity, prop } from 'ramda';
 import { ObjectId, MongoClient } from 'mongodb';
+import { DEFAULT_LIMIT, EmptyCollection } from 'rugo-common';
 
-import { CACHE_MONGO_KEY, COLLECTION, DEFAULT_LIMIT, DRIVER } from './constants.js';
+import { CACHE_MONGO_KEY, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
 
 /**
@@ -152,7 +153,7 @@ const getCollection = ({ db }, name) => {
   const collection = db.collection(name);
 
   return {
-    ...COLLECTION,
+    ...EmptyCollection,
 
     id: ObjectId,
     create: curry(doCreate)(collection),
