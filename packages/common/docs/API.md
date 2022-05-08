@@ -42,6 +42,8 @@
 <dt><a href="#Document">Document</a> : <code>object</code></dt>
 <dd><p>Document structure.</p>
 </dd>
+<dt><a href="#Plugin">Plugin</a> : <code>object</code></dt>
+<dd></dd>
 </dl>
 
 <a name="doId"></a>
@@ -193,4 +195,18 @@ Document structure.
 | Name | Type | Description |
 | --- | --- | --- |
 | _id | <code>\*</code> | Id of the document. |
+
+<a name="Plugin"></a>
+
+## Plugin : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | name of plugin. |
+| depends | <code>Array.&lt;string&gt;</code> | depend registers, the context should have there before run this plugin. |
+| priority | <code>number</code> | same depend have lower priority is run first. |
+| start | <code>function</code> | Start function. |
+| close | <code>function</code> | Close function. |
 

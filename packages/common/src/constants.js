@@ -6,6 +6,8 @@ export const ID_PREFIX = 'r';
 export const ID_SIZE = 128 / 8;
 export const ID_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 
+export const MAX_PRIORITY = 9999;
+
 /**
  * Document structure.
  *

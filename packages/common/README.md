@@ -32,13 +32,25 @@ const EmptyCollection = {
 
 ```js
 const BaseCollection = {
-  d(){ },
+  id(){ },
   create(data){ },
   get(data, id){ },
   count(data, query),,
   list(data, query, controls){ },
   patch(data, query, controls){ }i,
   remove(data, query){ }
+}
+```
+
+### BasePlugin
+
+```js
+const BasePlugin = {
+  name: 'name-of-plugin',
+  depends: ['register-1', 'register-2', 'register-3'],
+  priority: 1,
+  async start(context){ },
+  async close(context){ }
 }
 ```
 
