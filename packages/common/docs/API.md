@@ -1,3 +1,11 @@
+## Constants
+
+<dl>
+<dt><a href="#wrapComposer">wrapComposer</a> ⇒ <code>object</code></dt>
+<dd><p>Wrap function with composer to prepare arguments and bind result.</p>
+</dd>
+</dl>
+
 ## Functions
 
 <dl>
@@ -39,12 +47,26 @@
 <dt><a href="#Collection">Collection</a> : <code>object</code></dt>
 <dd><p>Collection structure.</p>
 </dd>
+<dt><a href="#Composer">Composer</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#Document">Document</a> : <code>object</code></dt>
 <dd><p>Document structure.</p>
 </dd>
 <dt><a href="#Plugin">Plugin</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
+
+<a name="wrapComposer"></a>
+
+## wrapComposer ⇒ <code>object</code>
+Wrap function with composer to prepare arguments and bind result.
+
+**Kind**: global constant  
+**Returns**: <code>object</code> - Returned object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | Function need to wrap. |
 
 <a name="doId"></a>
 
@@ -183,6 +205,17 @@ Collection structure.
 | create | <code>function</code> | Create a new document. |
 | patch | <code>function</code> | Update existed documents. |
 | remove | <code>function</code> | Remove documents. |
+
+<a name="Composer"></a>
+
+## Composer : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| argsParser | <code>function</code> | Argument parser. |
+| returnParser | <code>function</code> | Return parser. |
 
 <a name="Document"></a>
 

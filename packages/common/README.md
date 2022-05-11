@@ -11,6 +11,14 @@ _Note: Cannot be used in Rugo Pipeline._
 ## Functions
 
 - `generateId`
+- `wrapComposer`
+
+```js
+const composer = {
+  argsParser => (...validateArgs) => (...targetArgs) => { return finalArgs; },
+  returnParser => result => (...targetArgs) => { return finalResult; }
+}
+```
 
 ## Objects
 
@@ -53,6 +61,12 @@ const BasePlugin = {
   async close(context){ }
 }
 ```
+
+
+### Composers
+
+- `BaseComposer`
+- `KoaComposer`
 
 ## API
 
