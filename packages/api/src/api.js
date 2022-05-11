@@ -1,15 +1,15 @@
+import { wrapComposer } from "rugo-common";
+
 /**
  * Create api endpoint.
  *
  * @param {Composer} composer Composer to processing arguments and result.
  * @returns {Function} target function
  */
-const createApi = composer => (...validateArgs) => async (...targetArgs) => {
-  const args = await composer.argsParser(validateArgs, targetArgs);
-
+const createApi = wrapComposer(async (model, action, ...args ) => {
   const result = {};
   try {
-    const res = await args[0][args[1]](...args.slice(2));
+    const res = await model[action](...args);
 
     result.status = res === null ? 404 : 200;
     result.data = res === null ? 'Not found' : res;
@@ -18,6 +18,6 @@ const createApi = composer => (...validateArgs) => async (...targetArgs) => {
     result.data = err.message;
   }
 
-  return await composer.returnParser(result, targetArgs);
-};
+  return result;
+});
 export default createApi;

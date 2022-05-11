@@ -19,19 +19,6 @@ const exec = api(model, 'custom', ...args);
 await exec(context);
 ```
 
-### composer
-
-```js
-const composer = {
-  argsParser => (...validateArgs) => (...targetArgs) => { return finalArgs; },
-  returnParser => result => (...targetArgs) => { return finalResult; }
-}
-```
-
-Local composer:
-
-- `KoaComposer`
-
 ## Plugin
 
 ```js

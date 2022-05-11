@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 
-import { BaseComposer, KoaComposer } from "../src/composer.js";
+import { BaseComposer, KoaComposer } from "rugo-common";
 import createApi from '../src/api.js';
 
 const FakeModel = {

@@ -25,7 +25,9 @@
     "mocha": "^10.0.0"
   },
   "dependencies": {
+    "@koa/router": "^10.1.1",
     "object-path": "^0.11.8",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "rugo-common": "../common"
   }
 }
