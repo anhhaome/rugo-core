@@ -87,6 +87,9 @@ const createPipeline = (pipeline, context = {}, stats = {}) => {
   const _pipeline = sortBy(prop('priority'), clone(pipeline));
 
   return {
+    context,
+    stats,
+    
     async start () { return await startPipeline(_pipeline, context, stats); },
     async close () { return await closePipeline(_pipeline, context, stats); }
   };
