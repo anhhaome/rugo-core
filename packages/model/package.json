@@ -28,6 +28,7 @@
     "uniqid": "^5.4.0"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "ramda": "^0.28.0",
     "rugo-common": "../common"
   }
