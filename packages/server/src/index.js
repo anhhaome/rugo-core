@@ -27,6 +27,7 @@ const logMiddleware = async (ctx, next) => {
   const ctime = new Date();
 
   console.log(
+    colors.yellow('[server] ') + 
     colors.grey(ctime.toISOString()) +
     ' ' +
     colors.yellow(ctx.method) +
@@ -48,7 +49,7 @@ const logMiddleware = async (ctx, next) => {
 const createServer = (port) => {
   // create server
   const server = new Koa();
-
+  
   // middlewares
   server.use(logMiddleware);
 
@@ -56,6 +57,15 @@ const createServer = (port) => {
 
   server.use(cors());
   server.use(koaBody({ multipart: true }));
+
+  server.use(async (ctx, next) => {
+    ctx.form = {
+      ...ctx.request.body,
+      ...ctx.request.files
+    };
+
+    return await next();
+  });
 
   return {
     koa: server,
