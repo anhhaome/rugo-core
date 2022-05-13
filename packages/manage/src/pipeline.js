@@ -89,7 +89,7 @@ const createPipeline = (pipeline, context = {}, stats = {}) => {
   return {
     context,
     stats,
-    
+
     async start () { return await startPipeline(_pipeline, context, stats); },
     async close () { return await closePipeline(_pipeline, context, stats); }
   };

@@ -1,4 +1,4 @@
-import { wrapComposer } from "rugo-common";
+import { wrapComposer } from 'rugo-common';
 
 /**
  * Create api endpoint.
@@ -6,7 +6,7 @@ import { wrapComposer } from "rugo-common";
  * @param {Composer} composer Composer to processing arguments and result.
  * @returns {Function} target function
  */
-const createApi = wrapComposer(async (model, action, ...args ) => {
+const createApi = wrapComposer(async (model, action, ...args) => {
   const result = {};
   try {
     const res = await model[action](...args);

@@ -15,14 +15,14 @@ export const BaseComposer = {
 export const KoaComposer = {
   ...BaseComposer,
 
-  argsParser: curry((validateArgs, { 0: context }) => 
+  argsParser: curry((validateArgs, { 0: context }) =>
     validateArgs.map(
       arg => typeof arg === 'string' && arg[0] === '.' ? objectPath.get(context, arg.substring(1)) : arg
     )
   ),
 
   returnParser: curryN(2, async (result, { 0: context, 1: next = () => {} }) => {
-    if (!result){
+    if (!result) {
       await next();
       return result;
     }
@@ -43,8 +43,8 @@ export const KoaComposer = {
 
 /**
  * Wrap function with composer to prepare arguments and bind result.
- * 
- * @param {function} fn Function need to wrap.
+ *
+ * @param {Function} fn Function need to wrap.
  * @returns {object} Returned object.
  */
 export const wrapComposer = fn => composer => (...validateArgs) => async (...targetArgs) => {

@@ -1,4 +1,5 @@
 export const DEFAULT_LIMIT = 10;
+export const PASSWORD_SALT = 10;
 
 const MAX_TIME = 99999999999999;
 export const ID_TIME_SIZE = MAX_TIME.toString(36).length;

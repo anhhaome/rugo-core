@@ -82,6 +82,21 @@ const context2 = await pp.close();
 /* context === context2 */
 ```
 
+### Runner
+
+```js
+dotenv.config();
+
+const platform = await createRunner();
+await platform.close();
+```
+
+### Command
+
+```bash
+npm run manage -- start
+```
+
 ## API
 
 [Visit API documentation.](./docs/API.md)

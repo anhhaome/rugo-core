@@ -16,5 +16,5 @@ const createRunner = async () => {
   console.log(colors.yellow('[/manage]'));
 
   return pp;
-}
+};
 export default createRunner;

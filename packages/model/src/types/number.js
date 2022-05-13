@@ -1,9 +1,10 @@
 import { InvalidTypeError, TriggerError } from '../exceptions.js';
 
 /**
+ * Validate number type.
  *
- * @param {*} _value
- * @returns
+ * @param {*} _value Value to validate
+ * @returns {number} Validated value
  */
 export const type = (_value) => {
   let value = _value;
@@ -16,10 +17,11 @@ export const type = (_value) => {
 };
 
 /**
+ * Validate min of value.
  *
- * @param value
- * @param schemaValue
- * @returns
+ * @param {*} value Value to validate
+ * @param {object} schemaValue Schema value to validate
+ * @returns {number} Validated value.
  */
 export const min = (value, schemaValue) => {
   if (value < schemaValue) { throw new TriggerError('lower than', value, schemaValue); }
@@ -27,10 +29,11 @@ export const min = (value, schemaValue) => {
 };
 
 /**
+ * Validate max of value.
  *
- * @param value
- * @param schemaValue
- * @returns
+ * @param {*} value Value to validate
+ * @param {object} schemaValue Schema value to validate
+ * @returns {number} Validated value.
  */
 export const max = (value, schemaValue) => {
   if (value > schemaValue) { throw new TriggerError('greater than', value, schemaValue); }

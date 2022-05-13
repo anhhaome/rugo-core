@@ -37,9 +37,16 @@ describe('Composer test', () => {
 
   it('should be wrap composer', async () => {
     const fn = wrapComposer(() => { return 123 });
-
     const res = await fn(BaseComposer)(1, 2, 3)(4, 5);
-
     expect(res).to.be.eq(123);
+
+    const fn2 = wrapComposer(() => { return null; });
+    const context = {};
+    const res2 = await fn2(KoaComposer)(1, 2, 3)(context, () => { context.valid = true });
+    expect(res2).to.be.eq(null);
+    expect(context).to.has.property('valid', true);
+
+    const res3 = await fn2(KoaComposer)(1, 2, 3)(context);
+    expect(res3).to.be.eq(null);
   });
 });

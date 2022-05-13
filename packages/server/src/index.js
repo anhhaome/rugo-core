@@ -27,7 +27,7 @@ const logMiddleware = async (ctx, next) => {
   const ctime = new Date();
 
   console.log(
-    colors.yellow('[server] ') + 
+    colors.yellow('[server] ') +
     colors.grey(ctime.toISOString()) +
     ' ' +
     colors.yellow(ctx.method) +
@@ -49,7 +49,7 @@ const logMiddleware = async (ctx, next) => {
 const createServer = (port) => {
   // create server
   const server = new Koa();
-  
+
   // middlewares
   server.use(logMiddleware);
 

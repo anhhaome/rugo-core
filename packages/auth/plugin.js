@@ -7,8 +7,8 @@ export default {
 
   name: 'auth',
   depends: ['model'],
-  
-  async start(context) {
+
+  async start (context) {
     const { AUTH_SECRET } = process.env;
     const userModel = await context.model('users');
 
@@ -17,4 +17,4 @@ export default {
       gate: curryN(3, createGate(composer))(AUTH_SECRET, userModel)
     });
   }
-}
+};

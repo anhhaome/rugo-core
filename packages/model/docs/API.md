@@ -28,10 +28,12 @@
 <dt><a href="#createModel">createModel(driver, rawSchema)</a> ⇒ <code><a href="#Model">Model</a></code></dt>
 <dd><p>Create a model with schema validation and transformation.</p>
 </dd>
-<dt><a href="#isEmptyValue">isEmptyValue(value)</a> ⇒ <code>*</code></dt>
-<dd></dd>
+<dt><a href="#isEmptyValue">isEmptyValue(value)</a> ⇒ <code>boolean</code></dt>
+<dd><p>Check value is empty or not.</p>
+</dd>
 <dt><a href="#validate">validate(schema, doc, patchMode)</a> ⇒ <code>Document</code></dt>
-<dd></dd>
+<dd><p>Validate document by schema</p>
+</dd>
 </dl>
 
 ## Typedefs
@@ -154,23 +156,29 @@ Create a model with schema validation and transformation.
 
 <a name="isEmptyValue"></a>
 
-## isEmptyValue(value) ⇒ <code>\*</code>
-**Kind**: global function  
+## isEmptyValue(value) ⇒ <code>boolean</code>
+Check value is empty or not.
 
-| Param | Type |
-| --- | --- |
-| value | <code>\*</code> | 
+**Kind**: global function  
+**Returns**: <code>boolean</code> - checked result  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | Value to check |
 
 <a name="validate"></a>
 
 ## validate(schema, doc, patchMode) ⇒ <code>Document</code>
-**Kind**: global function  
+Validate document by schema
 
-| Param | Type |
-| --- | --- |
-| schema | <code>\*</code> | 
-| doc | <code>\*</code> | 
-| patchMode | <code>\*</code> | 
+**Kind**: global function  
+**Returns**: <code>Document</code> - Validated document.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| schema | [<code>Schema</code>](#Schema) | Schema for validation. |
+| doc | <code>Document</code> | Document to validate. |
+| patchMode | <code>boolean</code> | Enable patch method. |
 
 <a name="Schema"></a>
 

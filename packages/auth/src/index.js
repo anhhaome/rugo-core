@@ -1,27 +1,44 @@
-import { wrapComposer } from "rugo-common";
+import { wrapComposer } from 'rugo-common';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
+/**
+ * @typedef {object} Result
+ * @property {number} status Status code.
+ * @property {*} data Message or any data.
+ */
+
+/**
+ * Return forbidden result.
+ *
+ * @param {*} data Message or data to response.
+ * @returns {Result} return data.
+ */
 const forbidden = (data) => ({
   status: 403,
   data
 });
 
+/**
+ * Return bad request result.
+ *
+ * @param {*} data Message or data to response.
+ * @returns {Result} return data.
+ */
 const badRequest = (data) => ({
   status: 400,
   data
-})
+});
 
 export const createLogin = wrapComposer(async (secret, model, form) => {
   const { email, password } = form;
 
-  if (!email || !password)
-    return badRequest('Email and Password must not be empty');
+  if (!email || !password) { return badRequest('Email and Password must not be empty'); }
 
   const { data: { 0: info } } = await model.list({ $limit: 1, email });
 
-  if (!info || !bcrypt.compareSync(password, info.password)){
-    return forbidden(ctx, 'Wrong email or password');
+  if (!info || !bcrypt.compareSync(password, info.password)) {
+    return forbidden('Wrong email or password');
   }
 
   const token = jwt.sign({
@@ -33,30 +50,35 @@ export const createLogin = wrapComposer(async (secret, model, form) => {
   return {
     status: 200,
     data: token
-  }
+  };
 });
 
+/**
+ * Verify token
+ *
+ * @param {string} token token to verify
+ * @param {string} secret secret of token
+ * @returns {object} return object or false
+ */
 const verifyToken = (token, secret) => {
   try {
     return jwt.verify(token, secret);
-  } catch(err){
+  } catch (err) {
     return false;
   }
-}
+};
 
 export const createGate = wrapComposer(async (secret, model, disabled, token, context) => {
-  if (disabled)
-    return null;
+  if (disabled) { return null; }
 
-  if (!token)
-    return forbidden('Access denied');
+  if (!token) { return forbidden('Access denied'); }
 
   const [authType, authToken] = token.split(' ');
   let user;
 
-  if (authType === 'Bearer'){
+  if (authType === 'Bearer') {
     const rel = await verifyToken(authToken, secret);
-    if (rel){
+    if (rel) {
       user = await model.get(rel.id);
     } else {
       return forbidden('Your session has expired. Please logging in again!');
@@ -67,8 +89,7 @@ export const createGate = wrapComposer(async (secret, model, disabled, token, co
     })).data[0];
   }
 
-  if (!user)
-    return forbidden('Access denied');
+  if (!user) { return forbidden('Access denied'); }
 
   context.user = user;
 

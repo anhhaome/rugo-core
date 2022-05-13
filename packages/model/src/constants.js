@@ -1,6 +1,3 @@
-export const DEFAULT_LIMIT = 10;
-export const PASSWORD_SALT = 10;
-
 /**
  * @global
  * @typedef {object} Schema

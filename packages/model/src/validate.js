@@ -5,17 +5,20 @@ export const types = {
 };
 
 /**
- * @param {*} value
- * @returns {*}
+ * Check value is empty or not.
+ *
+ * @param {*} value Value to check
+ * @returns {boolean} checked result
  */
 const isEmptyValue = value => value === null || value === undefined;
 
 /**
+ * Validate document by schema
  *
- * @param {*} schema
- * @param {*} doc
- * @param {*} patchMode
- * @returns {Document}
+ * @param {Schema} schema Schema for validation.
+ * @param {Document} doc Document to validate.
+ * @param {boolean} patchMode Enable patch method.
+ * @returns {Document} Validated document.
  */
 const validate = (schema, doc, patchMode) => {
   const validatedDoc = {};
