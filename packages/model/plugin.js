@@ -25,6 +25,7 @@ export default {
     };
 
     context.model = makeModel;
+    context.schemas = schemas;
   },
   async close () {
 
