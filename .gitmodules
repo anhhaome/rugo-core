@@ -1,3 +1,0 @@
-[submodule "packages/admin/lib"]
-	path = packages/admin/lib
-	url = git@github.com:anhhaome/vue-minimal-admin.git
