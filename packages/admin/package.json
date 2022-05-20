@@ -30,6 +30,7 @@
     "eslint-plugin-vue": "^8.2.0",
     "indexeddb-export-import": "^2.1.5",
     "jsdom": "^19.0.0",
+    "pluralize": "^8.0.0",
     "postcss": "^8.4.13",
     "prettier": "^2.5.1",
     "start-server-and-test": "^1.14.0",
