@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 // https://vitejs.dev/config/
 export default defineConfig({
   envPrefix: 'ADMIN_',
-  base: "/admin/",
+  base: "/",
   
   server: {
     port: 8080

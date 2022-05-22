@@ -13,6 +13,7 @@ export default {
       return data.data;
     }
 
+    // http
     MHttpPlugin.install({
       provide(_, obj){
         http = obj;
@@ -21,7 +22,8 @@ export default {
 
     http.token = sessionStorage.getItem(TOKEN_NAME);
 
-    app.provide("api", {
+    // api
+    const api = {
       http,
 
       get token(){
@@ -70,6 +72,17 @@ export default {
         const res = await http.delete(url);
         return handleResponse(res);
       }
-    });
+    };
+
+    app.provide("api", api);
+
+    // model
+    const model = name => ({
+      async list(){
+        return await api.get(`/api/${name}`);
+      }
+    })
+
+    app.provide("model", model);
   },
 };
