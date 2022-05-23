@@ -22,6 +22,40 @@ export default {
 
     http.token = sessionStorage.getItem(TOKEN_NAME);
 
+    // loader
+    const loader = {
+      _isLoading: false,
+      count: 0,
+      fn: () => {},
+
+      get isLoading(){
+        return this._isLoading
+      },
+
+      set isLoading(v){
+        this._isLoading = v;
+        this.fn(v);
+      },
+
+      inc(){
+        this.count++;
+        this.isLoading = true;
+      },
+
+      dec(){
+        this.count--;
+
+        if (this.count === 0)
+          this.isLoading = false;
+      },
+
+      onChange(fn){
+        this.fn = fn;
+      }
+
+    }
+    app.provide("loader", loader);
+
     // api
     const api = {
       http,
@@ -47,32 +81,31 @@ export default {
 
       async getInfo(){
         return await this.get(API_INFO);
-      },
-
-      async post(url, payload){
-        const http = this.http.createHttpClient(baseURL);
-        const res = await http.post(url, payload);
-        return handleResponse(res);
-      },
-  
-      async get(url){
-        const http = this.http.createHttpClient(baseURL);
-        const res = await http.get(url);
-        return handleResponse(res);
-      },
-  
-      async patch(url, payload){
-        const http = this.http.createHttpClient(baseURL);
-        const res = await http.patch(url, payload);
-        return handleResponse(res);
-      },
-  
-      async delete(url){
-        const http = this.http.createHttpClient(baseURL);
-        const res = await http.delete(url);
-        return handleResponse(res);
       }
     };
+
+    const methods = [ 'post', 'get', 'patch', 'delete' ];
+
+    for (let method of methods){
+      api[method] = async function(url, ...args){
+        const http = this.http.createHttpClient(baseURL);
+        loader.inc();
+
+        let res, error;
+        try {
+          res = await http[method](url, ...args);
+        } catch(err){
+          error = err;
+        }
+        
+        loader.dec();
+
+        if (error)
+          throw error;
+
+        return handleResponse(res);
+      }
+    }
 
     app.provide("api", api);
 
@@ -80,8 +113,12 @@ export default {
     const model = name => ({
       async list(){
         return await api.get(`/api/${name}`);
+      },
+
+      async create(doc){
+        return await api.post(`/api/${name}`, doc);
       }
-    })
+    });
 
     app.provide("model", model);
   },

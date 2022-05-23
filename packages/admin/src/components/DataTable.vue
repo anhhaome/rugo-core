@@ -4,6 +4,7 @@ import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton } from '../../l
 import { formatValueWithSchema } from '../utils';
 
 const props = defineProps(['data', 'schema']);
+defineEmits(['create'])
 
 // infomation
 const fields = computed(() => {
@@ -65,6 +66,7 @@ watch([
       <MButton
         variant="primary"
         class="justify-center w-9 h-9 px-0 py-0 mr-2"
+        @click="$emit('create')"
       >
         <ion-icon class="text-lg" icon="create" />
       </MButton>
