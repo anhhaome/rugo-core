@@ -98,7 +98,7 @@ describe('Model test', () => {
       const model = await createModel(fakeDriver, DEMO_SCHEMA);
 
       await model.create({ name: 'foo' });
-      const res = await model.list({ $limit: 1 });
+      const res = await model.list({ $limit: 1, $sort: { name: 1 }, $skip: 'abc' });
 
       expect(res).to.has.property('total', 1);
       expect(res).to.has.property('skip', 0);
@@ -108,6 +108,12 @@ describe('Model test', () => {
       expect(res.data[0]).to.has.property('_id');
       expect(res.data[0]).to.has.property('name', 'foo');
       expect(res.data[0]).to.has.property('kind', 'human');
+
+      const res2 = await model.list({ $limit: '-1', $sort: { name: '-1', kind: 'xxx' }, $skip: '1' });
+      expect(res2).to.has.property('total', 1);
+      expect(res2).to.has.property('skip', 1);
+      expect(res2).to.has.property('limit', -1);
+      expect(res2).to.has.property('data');
     });
 
     it('should patch', async () => {

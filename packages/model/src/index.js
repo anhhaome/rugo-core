@@ -43,7 +43,17 @@ const doList = async (collection, query) => {
     '$skip'
   ]);
 
-  if (typeof controls.$limit !== 'number') { controls.$limit = 10; }
+  controls.$limit = parseInt(controls.$limit);
+  if (isNaN(controls.$limit)) { controls.$limit = 10; }
+
+  for (let name in controls.$sort){
+    controls.$sort[name] = parseInt(controls.$sort[name]);
+    if (isNaN(controls.$sort[name]))
+      delete controls.$sort[name];
+  }
+
+  controls.$skip = parseInt(controls.$skip);
+  if (isNaN(controls.$skip)) { controls.$skip = 0; }
 
   return await collection.list(doQuery, controls);
 };
