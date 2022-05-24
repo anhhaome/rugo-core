@@ -1,10 +1,12 @@
 <script setup>
-import { computed, reactive, watch } from 'vue';
+import { computed, inject, reactive, watch } from 'vue';
 import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton } from '../../lib';
 import { formatValueWithSchema } from '../utils';
 
 const props = defineProps(['data', 'schema']);
-defineEmits(['create'])
+const emit = defineEmits(['create', 'remove'])
+
+const dialog = inject("mdialog");
 
 // infomation
 const fields = computed(() => {
@@ -51,6 +53,12 @@ const toggleSelectAll = checked => {
 // system
 const reload = () => {
   deselectAll();
+}
+
+const doRemove = async (doc) => {
+  if (await dialog.show("confirm")) {
+    emit('remove', doc);
+  };
 }
 
 watch([
@@ -102,7 +110,7 @@ watch([
       <template #afterrow="{row}">
         <MDropdown v-if="row" variant="none" position="right" :autohide="true">
           <MList>
-            <MListItem>Remove</MListItem>
+            <MListItem @click="doRemove(row)">Remove</MListItem>
             <MListItem>Details</MListItem>
           </MList>
         </MDropdown>
@@ -132,6 +140,10 @@ watch([
   th:last-child,
   td:last-child {
     width: 3em;
+  }
+
+  tr:hover {
+    @apply bg-gray-50; 
   }
 
   .toolbar {

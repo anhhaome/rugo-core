@@ -33,6 +33,7 @@
     "pluralize": "^8.0.0",
     "postcss": "^8.4.13",
     "prettier": "^2.5.1",
+    "qs": "^6.10.3",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
     "start-server-and-test": "^1.14.0",

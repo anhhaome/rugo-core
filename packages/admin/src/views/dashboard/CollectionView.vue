@@ -22,7 +22,7 @@ const table = reactive({
 const loadData = async () => {
   let result;
   try {
-    result = await model(collectionName.value).list();
+    result = await model(collectionName.value).list({ $sort: { createdAt: -1 }});
   } catch(err) {
     return noti.push('danger', err.message);
   }
@@ -60,6 +60,19 @@ const handleSave = async doc => {
   await loadData();
 }
 
+const handleRemove = async doc => {
+  let result;
+  try {
+    result = await model(collectionName.value).remove(doc._id);
+  } catch(err) {
+    return noti.push('danger', err.message);
+  }
+
+  noti.push('success', 'Document is removed!')
+
+  await loadData();
+}
+
 // start
 loadData();
 </script>
@@ -80,6 +93,7 @@ loadData();
       :data="table.data"
       :schema="table.schema"
       @create="isCreate = true; documentDialog.show()"
+      @remove="handleRemove"
     />
 
     <MAlert v-if="table.data.length === 0" variant="secondary" class="mb-0 rounded-none">

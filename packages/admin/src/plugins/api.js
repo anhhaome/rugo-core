@@ -1,5 +1,6 @@
 import { MHttpPlugin } from '../../lib';
 import { API_INFO, API_SIGN_IN, TOKEN_NAME } from '../constants';
+import qs from 'qs';
 
 export default {
   install: (app) => {
@@ -111,12 +112,16 @@ export default {
 
     // model
     const model = name => ({
-      async list(){
-        return await api.get(`/api/${name}`);
+      async list(query){
+        return await api.get(`/api/${name}?${qs.stringify(query)}`);
       },
 
       async create(doc){
         return await api.post(`/api/${name}`, doc);
+      },
+
+      async remove(id){
+        return await api.delete(`/api/${name}/${id}`);
       }
     });
 
