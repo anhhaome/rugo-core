@@ -2,7 +2,7 @@
 import { inject, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { formatName } from '../../utils';
-import { MPanel, MAlert, MDialog } from '../../../lib';
+import { MPanel, MAlert, MDialog, MPagination } from '../../../lib';
 import { useInfoStore } from '../../stores/info';
 import DataTable from '../../components/DataTable.vue';
 import DocumentForm from '../../components/DocumentForm.vue';
@@ -16,22 +16,33 @@ const infoStore = useInfoStore();
 // load data
 const table = reactive({
   data: [],
+  total: 0,
+  skip: 0,
+  limit: 10,
   schema: {}
 });
 
 const loadData = async () => {
   let result;
   try {
-    result = await model(collectionName.value).list({ $sort: { createdAt: -1 }});
+    result = await model(collectionName.value).list({ $sort: { createdAt: -1 }, $skip: table.skip });
   } catch(err) {
     return noti.push('danger', err.message);
   }
   
   table.data = result.data;
+  table.total = result.total;
+  table.skip = result.skip;
+  table.limit = result.limit;
   
   for (let schema of infoStore.info)
     if (schema.__name === collectionName.value)
       table.schema = schema;
+}
+
+const updateSkip = skip => {
+  table.skip = skip;
+  loadData();
 }
 
 watch(
@@ -94,6 +105,15 @@ loadData();
       :schema="table.schema"
       @create="isCreate = true; documentDialog.show()"
       @remove="handleRemove"
+    />
+
+    <MPagination
+      v-if="table.data.length"
+      class="mt-4 justify-end"
+      :total="table.total"
+      :limit="table.limit"
+      :modelValue="table.skip"
+      @update:modelValue="updateSkip"
     />
 
     <MAlert v-if="table.data.length === 0" variant="secondary" class="mb-0 rounded-none">

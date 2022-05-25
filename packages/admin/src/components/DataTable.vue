@@ -1,6 +1,6 @@
 <script setup>
-import { computed, inject, reactive, watch } from 'vue';
-import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton } from '../../lib';
+import { computed, inject, reactive, ref, watch } from 'vue';
+import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton, MDialog } from '../../lib';
 import { formatValueWithSchema } from '../utils';
 
 const props = defineProps(['data', 'schema']);
@@ -51,8 +51,21 @@ const toggleSelectAll = checked => {
 }
 
 // system
+const currentDoc = ref([]);
+const viewDialog = ref(null);
+
 const reload = () => {
   deselectAll();
+}
+
+const doView = (doc) => {
+  currentDoc.value = [
+    { key: 'Id', value: doc._id },
+    { key: 'Created At', value: (new Date(doc.createdAt)).toLocaleString('vi-VN') },
+    { key: 'Updated At', value: (new Date(doc.updatedAt)).toLocaleString('vi-VN') }
+  ];
+
+  viewDialog.value.show();
 }
 
 const doRemove = async (doc) => {
@@ -88,62 +101,98 @@ watch([
       </MButton>
     </div>
 
-    <MTable
-      :data="props.data"
-      :labels="fields"
-    >
-      <template #beforerow="{row}">
-        <MCheckbox
-          v-if="row"
-          :modelValue="isSelect(row)"
-          @update:modelValue="toggleSelect(row, $event)"
-        />
+    <div class="wrapper select-none" v-dragscroll>
+      <MTable
+        :data="props.data"
+        :labels="fields"
+      >
+        <template #beforerow="{row}">
+          <MCheckbox
+            v-if="row"
+            :modelValue="isSelect(row)"
+            @update:modelValue="toggleSelect(row, $event)"
+          />
 
-        <MCheckbox
-          v-else-if="props.data.length"
-          :indeterminate="isAnySelectAndNotAll"
-          :modelValue="isSelectAll"
-          @update:modelValue="toggleSelectAll($event)"
-        />
-      </template>
+          <MCheckbox
+            v-else-if="props.data.length"
+            :indeterminate="isAnySelectAndNotAll"
+            :modelValue="isSelectAll"
+            @update:modelValue="toggleSelectAll($event)"
+          />
+        </template>
 
-      <template #afterrow="{row}">
-        <MDropdown v-if="row" variant="none" position="right" :autohide="true">
-          <MList>
-            <MListItem @click="doRemove(row)">Remove</MListItem>
-            <MListItem>Details</MListItem>
-          </MList>
-        </MDropdown>
-      </template>
+        <template #afterrow="{row}">
+          <MDropdown v-if="row" variant="none" position="right" :autohide="true">
+            <MList>
+              <MListItem @click="doView(row)">View</MListItem>
+              <MListItem @click="doView(row)">Edit</MListItem>
+              <MListItem class="text-red-500" @click="doRemove(row)">Delete</MListItem>
+            </MList>
+          </MDropdown>
+        </template>
 
-      <template #cell()="{value, label}">
-        <span v-html="formatValueWithSchema(value, props.schema[label])"></span>
-      </template>
-    </MTable>
+        <template #cell()="{value, label}">
+          <span v-html="formatValueWithSchema(value, props.schema[label])"></span>
+        </template>
+      </MTable>
+    </div>
+
+    <div class="wrapper-margin"></div>
+
+    <MDialog :label="false" ref="viewDialog">
+      <MTable :data="currentDoc" />
+    </MDialog>
   </div>
 </template>
 
 <style lang="scss">
+
 .collection-data-table {
-  th:first-child,
-  td:first-child {
-    width: 3em;
-    
-    div {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
+  .wrapper {
+    overflow: auto;
+    padding-bottom: 10em;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    table {
+      table-layout: auto;
+
+      th, td {
+        min-width: 10em;
+        min-height: 2em;
+      }
+
+      th:first-child,
+      td:first-child {
+        width: 3em;
+        min-width: 3em;
+        
+        div {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+        }
+      }
+
+      th:last-child,
+      td:last-child {
+        width: 3em;
+        min-width: 3em;
+      }
+
+      tr:hover {
+        @apply bg-gray-50; 
+      }
     }
   }
 
-  th:last-child,
-  td:last-child {
-    width: 3em;
+  .wrapper::-webkit-scrollbar {
+    display: none;
   }
 
-  tr:hover {
-    @apply bg-gray-50; 
+  .wrapper-margin {
+    margin-top: -10em;
   }
 
   .toolbar {
