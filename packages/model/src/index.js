@@ -84,8 +84,9 @@ const doCreate = async (collection, schema, doc) => {
   const insertedDoc = validate(schema, doc);
 
   // addition info
-  insertedDoc.createdAt = new Date();
-  insertedDoc.updatedAt = new Date();
+  const now = (new Date()).toString();
+  insertedDoc.createdAt = now;
+  insertedDoc.updatedAt = now;
   insertedDoc.version = 1;
 
   // exec
@@ -120,7 +121,8 @@ const doPatch = async (collection, schema, id, doc) => {
   if (Object.keys(unset).length) { controls.$unset = unset; }
 
   // addition info
-  patchedDoc.updatedAt = new Date();
+  const now = (new Date()).toString();
+  patchedDoc.updatedAt = now;
   controls.$inc = controls.$inc || {};
   controls.$inc.version = 1;
   controls.$set = patchedDoc;
