@@ -4,7 +4,7 @@ import { reactive, watch } from 'vue';
 import { formatName } from '../utils';
 import { MInput, MButton } from "../../lib";
 
-const props = defineProps(['schema']);
+const props = defineProps(['schema', 'isCreate', 'doc']);
 defineEmits(['save', 'cancel']);
 
 const fields = reactive([]);
@@ -24,17 +24,20 @@ const reload = () => {
       schema: props.schema[key]
     });
 
-    form[key] = '';
+    form[key] = props.doc ? props.doc[key] : '';
   }
 }
 
-watch(() => props.schema, reload);
+watch([
+  () => props.schema,
+  () => props.doc
+], reload);
 
 reload();
 </script>
 
 <template>
-  <h2 class="text-xl" v-if="props.schema.__name">Create a new {{ formatName(props.schema.__name).toLowerCase() }}</h2>
+  <h2 class="text-xl" v-if="props.schema.__name">{{ props.isCreate ? 'Create a new' : 'Edit an existed'}} {{ formatName(props.schema.__name).toLowerCase() }}</h2>
 
   <div v-for="field in fields" :key="field.key">
     <MInput :label="field.name" type="text" v-model="form[field.name]" />

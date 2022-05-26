@@ -120,6 +120,10 @@ export default {
         return await api.post(`/api/${name}`, doc);
       },
 
+      async patch(id, doc){
+        return await api.patch(`/api/${name}/${id}`, doc);
+      },
+
       async remove(id){
         return await api.delete(`/api/${name}/${id}`);
       }

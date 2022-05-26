@@ -4,7 +4,7 @@ import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton, MDialog } from
 import { formatValueWithSchema } from '../utils';
 
 const props = defineProps(['data', 'schema']);
-const emit = defineEmits(['create', 'remove'])
+const emit = defineEmits(['create', 'remove', 'edit'])
 
 const dialog = inject("mdialog");
 
@@ -125,7 +125,7 @@ watch([
           <MDropdown v-if="row" variant="none" position="right" :autohide="true">
             <MList>
               <MListItem @click="doView(row)">View</MListItem>
-              <MListItem @click="doView(row)">Edit</MListItem>
+              <MListItem @click="$emit('edit', row)">Edit</MListItem>
               <MListItem class="text-red-500" @click="doRemove(row)">Delete</MListItem>
             </MList>
           </MDropdown>

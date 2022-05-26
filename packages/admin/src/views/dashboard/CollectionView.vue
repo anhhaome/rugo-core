@@ -56,18 +56,30 @@ watch(
 // handle document
 const documentDialog = ref(null);
 const isCreate = ref(true);
+const currentDoc = ref(null);
 
 const handleSave = async doc => {
   let result;
-  try {
-    result = await model(collectionName.value).create(doc);
-  } catch(err) {
-    return noti.push('danger', err.message);
+
+  if (isCreate.value){
+    try {
+      result = await model(collectionName.value).create(doc);
+    } catch(err) {
+      return noti.push('danger', err.message);
+    }
+
+    noti.push('success', 'Document is created!')
+  } else {
+    try {
+      result = await model(collectionName.value).patch(currentDoc.value._id, doc);
+    } catch(err) {
+      return noti.push('danger', err.message);
+    }
+
+    noti.push('success', 'Document is updated!')
   }
 
-  noti.push('success', 'Document is created!')
   documentDialog.value.hide();
-
   await loadData();
 }
 
@@ -95,6 +107,8 @@ loadData();
     <MDialog :label="false" ref="documentDialog">
       <DocumentForm
         :schema="table.schema"
+        :doc="currentDoc"
+        :isCreate="isCreate"
         @save="handleSave"
         @cancel="documentDialog.hide()"
       />
@@ -103,7 +117,8 @@ loadData();
     <DataTable
       :data="table.data"
       :schema="table.schema"
-      @create="isCreate = true; documentDialog.show()"
+      @create="() => { isCreate = true; currentDoc = null; documentDialog.show(); }"
+      @edit="doc => { isCreate = false; currentDoc = doc; documentDialog.show(); }"
       @remove="handleRemove"
     />
 
