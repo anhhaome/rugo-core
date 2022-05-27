@@ -1,11 +1,11 @@
 <script setup>
 import { inject, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { formatName } from '../../utils';
-import { MPanel, MAlert, MDialog, MPagination } from '../../../lib';
-import { useInfoStore } from '../../stores/info';
-import DataTable from '../../components/DataTable.vue';
-import DocumentForm from '../../components/DocumentForm.vue';
+import { formatName } from '../../../utils';
+import { MPanel, MAlert, MDialog, MPagination } from '../../../../lib';
+import { useInfoStore } from '../../../stores/info';
+import DataTable from '../../../components/DataTable.vue';
+import DocumentForm from '../../../components/DocumentForm.vue';
 
 const route = useRoute();
 const model = inject('model');
@@ -48,6 +48,9 @@ const updateSkip = skip => {
 watch(
   () => route.params.collectionName,
   async name => {
+    if (route.name.indexOf('TableCollection') === -1)
+      return;
+
     collectionName.value = name;
     await loadData();
   }

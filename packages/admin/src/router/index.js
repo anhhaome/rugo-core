@@ -26,9 +26,21 @@ const router = createRouter({
         },
 
         {
-          path: ":collectionName",
-          name: ":collectionName",
-          component: () => import("../views/dashboard/CollectionView.vue"),
+          name: 'MemTableCollection',
+          path: "mem/:collectionName",
+          component: () => import("../views/dashboard/collection/TableView.vue"),
+        },
+
+        {
+          name: 'MongoTableCollection',
+          path: "mongo/:collectionName",
+          component: () => import("../views/dashboard/collection/TableView.vue"),
+        },
+
+        {
+          name: 'FsCollection',
+          path: "fs/:collectionName",
+          component: () => import("../views/dashboard/collection/FsView.vue"),
         }
       ]
     }

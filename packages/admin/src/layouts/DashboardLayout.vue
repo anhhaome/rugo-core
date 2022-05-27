@@ -44,7 +44,11 @@ onBeforeMount(async () => {
   navigations.push(...[
     { type: 'label', name: 'Collections' },
     ...infoStore.info.map(schema => ({
-      type: 'link', name: formatName(schema.__name), href: `/dashboard/${schema.__name}`, icon: 'file-tray', active: false
+      type: 'link', 
+      name: formatName(schema.__name), 
+      href: `/dashboard/${schema.__type}/${schema.__name}`, 
+      icon: schema.__icon || 'file-tray', 
+      active: false
     })),
     { type: 'label', name: 'Actions' },
     { type: "link", name: "Sign out", href: "/signout", icon: "log-out" },
