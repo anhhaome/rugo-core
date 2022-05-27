@@ -20,7 +20,7 @@
 export const FS_SCHEMA = {
   name: { type: 'text', maxlength: 255, regex: '^[\\w\\-. ]+$' },
   mime: { type: 'text', maxlength: 255, regex: '^\\w+\\/[-+.\\w]+$' },
-  parent: { type: 'relationship' },
+  parent: { type: 'text' },
   data: { type: 'file' },
   size: { type: 'number' }
 };
