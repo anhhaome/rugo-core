@@ -3,11 +3,10 @@ import { join, parse } from 'path';
 import { compose, curry, curryN, map, prop } from 'ramda';
 import base64url from 'base64url';
 import Mime from 'mime';
-import { EmptyCollection, generateId } from 'rugo-common';
+import { EmptyCollection, generateId, FileData } from 'rugo-common';
 
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
-import FileData from './file.js';
 
 /**
  * Encode path to id (base64url)

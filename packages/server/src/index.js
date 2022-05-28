@@ -3,6 +3,7 @@ import koaBody from 'koa-body';
 import cors from '@koa/cors';
 import applyQueryString from 'koa-qs';
 import colors from 'colors';
+import { FileData } from 'rugo-common';
 
 /**
  *
@@ -63,6 +64,12 @@ const createServer = (port) => {
       ...ctx.request.body,
       ...ctx.request.files
     };
+
+    for (let key in ctx.form){
+      if (ctx.form[key].constructor.name === 'PersistentFile'){
+        ctx.form[key] = new FileData(ctx.form[key].filepath)
+      }
+    }
 
     return await next();
   });

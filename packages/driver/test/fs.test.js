@@ -10,7 +10,7 @@ import createFsDriver from '../src/fs.js';
 import { globalCaches } from '../src/memoize.js';
 import { expect } from 'chai';
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from '../src/constants.js';
-import FileData from '../src/file.js';
+import { FileData } from 'rugo-common';
 import base64url from 'base64url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
