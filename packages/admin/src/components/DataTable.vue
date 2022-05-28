@@ -86,7 +86,7 @@ watch([
     <div class="toolbar mb-4">
       <MButton
         variant="primary"
-        class="justify-center w-9 h-9 px-0 py-0 mr-2"
+        class="justify-center w-8 h-8 px-0 py-0 mr-2"
         @click="$emit('create')"
       >
         <ion-icon class="text-lg" icon="create" />
@@ -95,7 +95,7 @@ watch([
       <MButton
         v-if="selected.size"
         variant="danger"
-        class="justify-center w-9 h-9 px-0 py-0 mr-2"
+        class="justify-center w-8 h-8 px-0 py-0 mr-2"
       >
         <ion-icon class="text-lg" icon="trash" />
       </MButton>

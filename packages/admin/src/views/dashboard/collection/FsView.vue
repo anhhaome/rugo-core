@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { formatName } from '../../../utils';
 import { MPanel } from '../../../../lib';
 import { useInfoStore } from '../../../stores/info';
+import FileExplorer from '../../../components/FileExplorer.vue';
 
 const route = useRoute();
 const model = inject('model');
@@ -14,13 +15,14 @@ const infoStore = useInfoStore();
 // load data
 const fs = reactive({
   data: [],
-  schema: {}
+  schema: {},
+  parent: 'Lw'
 });
 
 const loadData = async () => {
   let result;
   try {
-    result = await model(collectionName.value).list();
+    result = await model(collectionName.value).list({ parent: fs.parent });
   } catch(err) {
     return noti.push('danger', err.message);
   }
@@ -43,6 +45,48 @@ watch(
   }
 );
 
+// data handle
+const handleCreate = async (doc) => {
+  let result;
+
+  try {
+    result = await model(collectionName.value).create(doc);
+  } catch(err) {
+    return noti.push('danger', err.message);
+  }
+
+  noti.push('success', `${doc.name} is created!`)
+  await loadData();
+}
+
+const handleRemove = async doc => {
+  let result;
+  try {
+    result = await model(collectionName.value).remove(doc._id);
+  } catch(err) {
+    return noti.push('danger', err.message);
+  }
+
+  noti.push('success', 'Item is removed!')
+
+  await loadData();
+}
+
+const handleUpload = async docs => {
+  for (let doc of docs){
+    try {
+      await model(collectionName.value).create(doc);
+    } catch(err) {
+      noti.push('danger', err.message);
+      continue;
+    }
+
+    noti.push('success', `${doc.name} have been upload!`);
+  }
+
+  await loadData();
+}
+
 // start
 loadData();
 </script>
@@ -51,6 +95,13 @@ loadData();
   <h1 class="text-3xl mt-4 font-semibold">{{ formatName(collectionName) }}</h1>
 
   <MPanel>
-    Hello Fs
+    <FileExplorer
+      :data="fs.data"
+      :parent="fs.parent"
+      @create="handleCreate"
+      @remove="handleRemove"
+      @update:parent="id => { fs.parent = id; loadData(); }"
+      @upload="handleUpload"
+    />
   </MPanel>
 </template>
