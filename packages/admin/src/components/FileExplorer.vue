@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, inject, reactive, ref, watch } from 'vue';
 import { DIRECTORY_MIME } from '../constants';
 import { base64url } from '../utils';
 import { MButton, MTable, MCheckbox, MDropdown, MList, MListItem, MBreadcrumb } from '../../lib';
@@ -38,6 +38,10 @@ const toggleSelectAll = checked => {
     deselectAll();
   }
 }
+
+watch(() => props.parent, () => {
+  deselectAll();
+});
 
 // info
 const addresses = computed(() => {
@@ -213,8 +217,6 @@ const upload = () => {
 <style lang="scss">
 .file-explorer {
   table {
-    table-layout: auto;
-
     th, td {
       min-width: 10em;
       min-height: 2em;
@@ -241,6 +243,23 @@ const upload = () => {
 
     tr:hover {
       @apply bg-gray-50; 
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 8em;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 13em;
     }
   }
 }
