@@ -47,10 +47,8 @@ watch(
 
 // data handle
 const handleCreate = async (doc) => {
-  let result;
-
   try {
-    result = await model(collectionName.value).create(doc);
+    await model(collectionName.value).create(doc);
   } catch(err) {
     return noti.push('danger', err.message);
   }
@@ -59,20 +57,29 @@ const handleCreate = async (doc) => {
   await loadData();
 }
 
-const handleRemove = async doc => {
-  let result;
-  try {
-    result = await model(collectionName.value).remove(doc._id);
-  } catch(err) {
-    return noti.push('danger', err.message);
+const handleRemove = async docs => {
+  let counter = 0;
+
+  for (let doc of docs) {
+    try {
+      await model(collectionName.value).remove(doc._id);
+    } catch(err) {
+      noti.push('danger', err.message);
+      continue;
+    }
+
+    counter++;
   }
 
-  noti.push('success', 'Item is removed!')
-
+  if (counter)
+    noti.push('success', `Removed ${counter} item(s)!`);
+    
   await loadData();
 }
 
 const handleUpload = async docs => {
+  let counter = 0;
+
   for (let doc of docs){
     try {
       await model(collectionName.value).create(doc);
@@ -81,8 +88,11 @@ const handleUpload = async docs => {
       continue;
     }
 
-    noti.push('success', `${doc.name} have been upload!`);
+    counter++;
   }
+
+  if (counter)
+    noti.push('success', `Uploaded ${counter} file(s)!`);
 
   await loadData();
 }

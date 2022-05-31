@@ -86,15 +86,22 @@ const handleSave = async doc => {
   await loadData();
 }
 
-const handleRemove = async doc => {
-  let result;
-  try {
-    result = await model(collectionName.value).remove(doc._id);
-  } catch(err) {
-    return noti.push('danger', err.message);
+const handleRemove = async docs => {
+  let counter = 0;
+
+  for (let doc of docs){
+    try {
+      await model(collectionName.value).remove(doc._id);
+    } catch(err) {
+      noti.push('danger', err.message);
+      continue;
+    }
+
+    counter++;
   }
 
-  noti.push('success', 'Document is removed!')
+  if (counter)
+    noti.push('success', `Removed ${counter} document(s)!`);
 
   await loadData();
 }

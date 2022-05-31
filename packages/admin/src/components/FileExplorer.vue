@@ -39,7 +39,10 @@ const toggleSelectAll = checked => {
   }
 }
 
-watch(() => props.parent, () => {
+watch([
+  () => props.parent,
+  () => props.data
+], () => {
   deselectAll();
 });
 
@@ -132,8 +135,10 @@ const upload = () => {
       </MButton>
 
       <MButton
+        v-if="selected.size"
         variant="danger"
         class="justify-center w-8 h-8 px-0 py-0 mr-2"
+        @click="remove(selected)"
       >
         <ion-icon class="text-lg" icon="trash" />
       </MButton>
@@ -188,7 +193,7 @@ const upload = () => {
           <MList>
             <MListItem>View</MListItem>
             <MListItem>Edit</MListItem>
-            <MListItem class="text-red-500" @click="remove(row)">Delete</MListItem>
+            <MListItem class="text-red-500" @click="remove([row])">Delete</MListItem>
           </MList>
         </MDropdown>
       </template>

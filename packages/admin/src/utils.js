@@ -19,6 +19,10 @@ export const formatValueWithSchema = (value, fieldSchema) => {
     return `<code class="bg-gray-200 text-gray-500 rounded px-2 py-0.5 text-xs">${value}</code>`
   }
 
+  if (value === ''){
+    return `<code class="bg-gray-200 text-gray-500 rounded px-2 py-0.5 text-xs">empty</code>`
+  }
+
   value = htmlToText.convert(value.toString(), { wordwrap: false }).trim();
 
   if (value.length > MAX_TEXT_LENGTH)

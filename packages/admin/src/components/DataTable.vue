@@ -58,7 +58,7 @@ const reload = () => {
   deselectAll();
 }
 
-const doView = (doc) => {
+const view = (doc) => {
   currentDoc.value = [
     { key: 'Id', value: doc._id },
     { key: 'Created At', value: (new Date(doc.createdAt)).toLocaleString('vi-VN') },
@@ -68,9 +68,9 @@ const doView = (doc) => {
   viewDialog.value.show();
 }
 
-const doRemove = async (doc) => {
+const remove = async (docs) => {
   if (await dialog.show("confirm")) {
-    emit('remove', doc);
+    emit('remove', docs);
   };
 }
 
@@ -96,6 +96,7 @@ watch([
         v-if="selected.size"
         variant="danger"
         class="justify-center w-8 h-8 px-0 py-0 mr-2"
+        @click="remove(selected)"
       >
         <ion-icon class="text-lg" icon="trash" />
       </MButton>
@@ -124,9 +125,9 @@ watch([
         <template #afterrow="{row}">
           <MDropdown v-if="row" variant="none" position="right" :autohide="true">
             <MList>
-              <MListItem @click="doView(row)">View</MListItem>
+              <MListItem @click="view(row)">View</MListItem>
               <MListItem @click="$emit('edit', row)">Edit</MListItem>
-              <MListItem class="text-red-500" @click="doRemove(row)">Delete</MListItem>
+              <MListItem class="text-red-500" @click="remove([row])">Delete</MListItem>
             </MList>
           </MDropdown>
         </template>
