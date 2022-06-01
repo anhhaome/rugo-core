@@ -2,7 +2,7 @@
 import { inject, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { formatName } from '../../../utils';
-import { MPanel, MAlert, MDialog, MPagination } from '../../../../lib';
+import { MPanel, MDialog, MPagination } from '../../../../lib';
 import { useInfoStore } from '../../../stores/info';
 import DataTable from '../../../components/DataTable.vue';
 import DocumentForm from '../../../components/DocumentForm.vue';
@@ -141,8 +141,8 @@ loadData();
       @update:modelValue="updateSkip"
     />
 
-    <MAlert v-if="table.data.length === 0" variant="secondary" class="mb-0 rounded-none">
+    <div v-if="table.data.length === 0" class="text-center bg-gray-50 italic py-2 px-4 text-gray-400">
       The collection is empty.
-    </MAlert>
+    </div>
   </MPanel>
 </template>
