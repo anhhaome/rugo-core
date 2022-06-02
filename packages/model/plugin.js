@@ -1,5 +1,15 @@
 import { BasePlugin } from 'rugo-common';
 import createModel from './src/index.js';
+import { types } from './src/validate.js';
+
+types.upload = {
+  type(value){
+    if (typeof value !== 'string')
+      throw new InvalidTypeError(value, 'upload');
+
+    return value;
+  }
+}
 
 export default {
   ...BasePlugin,

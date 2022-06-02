@@ -66,7 +66,7 @@ const createServer = (port) => {
     };
 
     for (let key in ctx.form){
-      if (ctx.form[key].constructor.name === 'PersistentFile'){
+      if (ctx.form[key] && ctx.form[key].constructor.name === 'PersistentFile'){
         ctx.form[key] = new FileData(ctx.form[key].filepath)
       }
     }
