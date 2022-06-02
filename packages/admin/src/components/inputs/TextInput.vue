@@ -1,17 +1,24 @@
 <script setup>
+import { inject } from "vue";
 import { MInput, MRichEditor } from "../../../lib";
 
-defineProps(['label', 'modelValue', 'schema']);
+const props = defineProps(['label', 'modelValue', 'schema']);
 defineEmits(['update:modelValue']);
+
+const noti = inject('mnoti');
+
+const prepareInsertion = quill => {
+  if (!props.schema.upload)
+    return noti.push('warn', 'Do not have upload config!');
+}
 </script>
 
 <template>
-  <label class="block mb-2 mt-4 text-gray-600">{{label}}</label>
-
   <MRichEditor
     v-if="schema.editor === 'rich'"
     :modelValue="modelValue"
     @update:modelValue="event => $emit('update:modelValue', event)"
+    @insertImage="prepareInsertion"
   />
   
   <MInput

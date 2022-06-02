@@ -51,9 +51,10 @@ reload();
   <h2 class="text-xl" v-if="props.schema.__name">{{ props.isCreate ? 'Create a new' : 'Edit an existed'}} {{ formatName(props.schema.__name).toLowerCase() }}</h2>
 
   <div v-for="field in fields" :key="field.key">
+    <label class="block mb-2 mt-4 text-gray-600">{{field.name}}</label>
+
     <component
       :is="getView(field)"
-      :label="field.name"
       :schema="field.schema"
       v-model="form[field.name]"
     />

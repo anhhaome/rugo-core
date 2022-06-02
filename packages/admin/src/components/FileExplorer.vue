@@ -4,8 +4,8 @@ import { DIRECTORY_MIME } from '../constants';
 import { base64url } from '../utils';
 import { MButton, MTable, MCheckbox, MDropdown, MList, MListItem, MBreadcrumb } from '../../lib';
 
-const props = defineProps(['data', 'parent']);
-const emit = defineEmits(['create', 'update:parent']);
+const props = defineProps(['data', 'parent', 'mode', 'home', 'accept']);
+const emit = defineEmits(['create', 'update:parent', 'select']);
 
 const dialog = inject('mdialog');
 const uploadInput = ref(null);
@@ -15,6 +15,12 @@ const selected = reactive(new Set());
 
 const isAnySelectAndNotAll = computed(() => selected.size > 0 && selected.size < props.data.length);
 const isSelectAll = computed(() => selected.size === props.data.length);
+const sortedData = computed(() => {
+  return [
+    ...props.data.filter(item => item.mime === DIRECTORY_MIME),
+    ...props.data.filter(item => item.mime !== DIRECTORY_MIME),
+  ]
+});
 
 const isSelect = doc => selected.has(doc);
 
@@ -50,15 +56,19 @@ watch([
 const addresses = computed(() => {
   const splits = base64url.decode(props.parent).split('/').filter(i => i);
 
-  const result = [ { _id: 'Lw' }];
+  const result = [ { _id: '' }];
   for (let item of splits){
-    let lastId = result[result.length - 1]._id || base64url.encode('/');
+    let lastId = result[result.length - 1]._id;
 
     result.push({
       text: item,
       _id: base64url.encode(base64url.decode(lastId) + '/' + item)
     });
   }
+
+  result[0]._id = 'Lw';
+  if (props.home)
+    result[0].text = props.home;
 
   result[result.length - 1].active = true;
 
@@ -89,6 +99,9 @@ const open = doc => {
   if (doc.mime === DIRECTORY_MIME){
     return emit('update:parent', doc._id);
   }
+
+  if (props.mode === 'select')
+    return emit('select', doc);
 }
 
 const upload = () => {
@@ -110,7 +123,7 @@ const upload = () => {
 
 <template>
   <div class="file-explorer">
-    <div class="toolbar mb-4">
+    <div class="toolbar mb-4" v-if="mode !== 'select'">
       <MButton
         variant="primary"
         class="justify-center w-8 h-8 px-0 py-0 mr-2"
@@ -144,15 +157,22 @@ const upload = () => {
       </MButton>
     </div>
 
+    <MBreadcrumb
+      class="h-4 mb-4"
+      :items="addresses"
+      @navigate="item => item.active || $emit('update:parent', item._id)"
+    />
+
     <div
-      class="hidden w-full h-24 mb-4 relative border-2 rounded-lg border-dashed bg-gray-100 mactive:bg-transparent"
+      :class="`${mode !== 'select' ? 'hidden' : ''} w-full h-24 mb-4 relative border-2 rounded-lg border-dashed bg-gray-100 mactive:bg-transparent`"
       active
     >
       <input
         class="w-full h-full opacity-0"
         ref="uploadInput"
         type="file"
-        multiple
+        :multiple="mode !== 'select'"
+        :accept="accept || '*'"
         @change="upload"
       />
       <label class="pointer-events-none absolute w-full h-full p-4 top-0 left-0 flex flex-wrap items-center justify-center text-gray-400 text-base tracking-wider">
@@ -163,17 +183,11 @@ const upload = () => {
       </label>
     </div>
 
-    <MBreadcrumb
-      class="h-4 mb-4"
-      :items="addresses"
-      @navigate="item => item.active || $emit('update:parent', item._id)"
-    />
-
     <MTable
-      :data="data"
-      :labels="['name', 'size', 'updatedAt']"
+      :data="sortedData"
+      :labels="mode === 'select' ? ['name'] : ['name', 'size', 'updatedAt']"
     >
-      <template #beforerow="{row}">
+      <template #beforerow="{row}" v-if="mode !== 'select'">
         <MCheckbox
           v-if="row"
           :modelValue="isSelect(row)"
@@ -188,7 +202,7 @@ const upload = () => {
         />
       </template>
 
-      <template #afterrow="{row}">
+      <template #afterrow="{row}" v-if="mode !== 'select'">
         <MDropdown v-if="row" variant="none" position="right" :autohide="true">
           <MList>
             <MListItem>View</MListItem>
@@ -227,8 +241,8 @@ const upload = () => {
       min-height: 2em;
     }
 
-    th:first-child,
-    td:first-child {
+    th.beforerow,
+    td.beforerow {
       width: 3em;
       min-width: 3em;
       
@@ -240,8 +254,8 @@ const upload = () => {
       }
     }
 
-    th:last-child,
-    td:last-child {
+    th.afterrow,
+    td.afterrow {
       width: 3em;
       min-width: 3em;
     }
@@ -250,20 +264,20 @@ const upload = () => {
       @apply bg-gray-50; 
     }
 
-    th:nth-child(2),
-    td:nth-child(2) {
+    th.head-name,
+    td.cell-name {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
 
-    th:nth-child(3),
-    td:nth-child(3) {
+    th.head-size,
+    td.cell-size {
       width: 8em;
     }
 
-    th:nth-child(4),
-    td:nth-child(4) {
+    th.head-updatedAt,
+    td.cell-updatedAt {
       width: 13em;
     }
   }
