@@ -14,30 +14,26 @@ import { clone, difference, keys, prop, sortBy } from 'ramda';
  * @returns {object} Return context.
  */
 const startPipeline = async (pipeline, context, stats) => {
-  const queue = [];
-
   // init
   stats.doNotStarts = [];
   stats.starts = [];
 
-  const pushEmptyDepends = () => {
-    let i = 0;
-    while (i < pipeline.length) {
+  const findNext = () => {
+    for (let i = 0; i < pipeline.length; i++){
       if (pipeline[i].depends.length === 0) {
-        queue.push(pipeline.splice(i, 1)[0]);
-        continue;
+        return pipeline.splice(i, 1)[0];
       }
-
-      i++;
     }
+
+    return null;
   };
 
-  pushEmptyDepends();
+  let next = findNext();
 
   // execute context
   const result = [];
-  while (queue.length !== 0) {
-    const plugin = queue.shift();
+  while (next) {
+    const plugin = next;
 
     await plugin.start(context);
 
@@ -46,7 +42,8 @@ const startPipeline = async (pipeline, context, stats) => {
       plugin.depends = difference(plugin.depends, _keys);
     }
 
-    pushEmptyDepends();
+    next = findNext();
+
     result.push(plugin);
     stats.starts.push(plugin.name);
   }
