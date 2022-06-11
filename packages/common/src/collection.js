@@ -120,6 +120,16 @@ const doPatch = async (data, query, controls = {}) => {
     );
   }
 
+  if (controls.$unset) {
+    pipeline.push(
+      forEach(doc => {
+        for (const key in controls.$unset) {
+          delete doc[key];
+        }
+      })
+    );
+  }
+
   pipeline.push(length);
   const result = pipe(...pipeline)(data);
 
