@@ -1,3 +1,4 @@
+import path from 'path-browserify';
 import pluralize from 'pluralize';
 import htmlToText from 'html-to-text';
 import { Buffer } from 'buffer';
@@ -10,9 +11,19 @@ export const formatName = name => {
 }
 
 export const formatValueWithSchema = (value, fieldSchema) => {
+  const baseURL = import.meta.env.ADMIN_API_BASE_URL;
+
   switch (fieldSchema.type){
+    case 'boolean':
+      return `<ion-icon class="text-xl" name="${!!value ? 'checkbox-outline' : 'square-outline'}" />`
+
+    case 'upload':
+      if (value)
+        return `<a class="hover:underline" href="${baseURL}${value}" target="_blank">${path.parse(value).base}</a>`
+      break;
+    
     case 'password':
-      return '<span class="tracking-wider">●●●●●●●●<span>'
+      return '<span class="tracking-wider">●●●●●●●●<span>';
   }
 
   if (value === undefined || value === null || value === NaN){

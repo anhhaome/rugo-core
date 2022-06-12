@@ -1,6 +1,7 @@
 <script setup>
 import { computed, inject, reactive, ref, watch } from 'vue';
 import { MList, MListItem, MTable, MDropdown, MCheckbox, MButton, MDialog } from '../../lib';
+import RelationValue from './values/RelationValue.vue';
 import { formatValueWithSchema } from '../utils';
 
 const props = defineProps(['data', 'schema']);
@@ -133,7 +134,12 @@ watch([
         </template>
 
         <template #cell()="{value, label}">
-          <span v-html="formatValueWithSchema(value, props.schema[label])"></span>
+          <RelationValue
+            v-if="props.schema[label] && props.schema[label].type === 'relation'"
+            :value="value"
+            :schema="props.schema[label]"
+          />
+          <span v-else v-html="formatValueWithSchema(value, props.schema[label])"></span>
         </template>
       </MTable>
     </div>

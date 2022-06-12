@@ -33,6 +33,7 @@
     "html-to-text": "^8.2.0",
     "indexeddb-export-import": "^2.1.5",
     "jsdom": "^19.0.0",
+    "path-browserify": "^1.0.1",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.13",
     "prettier": "^2.5.1",
