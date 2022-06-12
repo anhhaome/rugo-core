@@ -132,6 +132,9 @@ describe('Model test', () => {
       const res = await model.patch(doc._id, { age: null });
 
       expect(res).to.be.eq(1)
+
+      const doc2 = await model.get(doc._id);
+      expect(doc2).not.to.has.property('age');
     });
 
     it('should remove', async () => {
