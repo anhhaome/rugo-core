@@ -13,14 +13,14 @@ const relation = reactive({
   data: []
 });
 
-const localValue = ref('');
+const localValue = ref(null);
 
 const syncLocalValue = () => {
   for(let item of relation.data)
     if (item._id === props.modelValue)
       return localValue.value = item[props.schema.str];
 
-  localValue.value = '';
+  localValue.value = null;
 }
 
 const loadData = async () => {
@@ -45,8 +45,8 @@ const validate = () => {
     if (item[props.schema.str] === localValue.value)
       return emit('update:modelValue', item._id);
 
-  emit('update:modelValue', '');
-  localValue.value = '';
+  emit('update:modelValue', null);
+  localValue.value = null;
 }
 
 watch(() => props.modelValue, syncLocalValue);
@@ -71,8 +71,8 @@ watch(() => props.modelValue, syncLocalValue);
         <button
           class="border-2 border-warn-500 text-warn-500 rounded-full w-6 h-6 opacity-50 inline-flex items-center justify-center absolute right-2.5 top-2.5
           hover:opacity-100"
-          v-if="localValue"
-          @click="emit('update:modelValue', '')"
+          v-if="localValue && !schema.required && !schema.default"
+          @click="emit('update:modelValue', null)"
         >
           <ion-icon class="text-lg" name="close" />
         </button>

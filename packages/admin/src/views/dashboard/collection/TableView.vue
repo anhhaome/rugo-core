@@ -13,6 +13,9 @@ const noti = inject('mnoti');
 const collectionName = ref(route.params.collectionName);
 const infoStore = useInfoStore();
 
+const isAnyChanged = ref(false);
+const dialog = inject("mdialog");
+
 // load data
 const table = reactive({
   data: [],
@@ -106,6 +109,13 @@ const handleRemove = async docs => {
   await loadData();
 }
 
+const handleCancel = async () => {
+  if (isAnyChanged.value && !await dialog.show('confirm'))
+    return;
+
+  documentDialog.value.hide();
+}
+
 // start
 loadData();
 </script>
@@ -114,21 +124,28 @@ loadData();
   <h1 class="text-3xl mt-4 font-semibold">{{ formatName(collectionName) }}</h1>
 
   <MPanel>
-    <MDialog :label="false" ref="documentDialog">
+    <MDialog
+      ref="documentDialog"
+      :label="false"
+      :disableHotKey="true"
+      :disableDefaultClose="true"
+      @close="handleCancel"
+    >
       <DocumentForm
         :schema="table.schema"
         :doc="currentDoc"
         :isCreate="isCreate"
         @save="handleSave"
-        @cancel="documentDialog.hide()"
+        @cancel="handleCancel"
+        @change="isAnyChanged = true"
       />
     </MDialog>
 
     <DataTable
       :data="table.data"
       :schema="table.schema"
-      @create="() => { isCreate = true; currentDoc = null; documentDialog.show(); }"
-      @edit="doc => { isCreate = false; currentDoc = doc; documentDialog.show(); }"
+      @create="() => { isCreate = true; isAnyChanged = false; currentDoc = null; documentDialog.show(); }"
+      @edit="doc => { isCreate = false; isAnyChanged = false; currentDoc = doc; documentDialog.show(); }"
       @remove="handleRemove"
     />
 

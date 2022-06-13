@@ -1,3 +1,4 @@
+import { RugoError } from './exceptions.js';
 import * as _types from './types/index.js';
 
 export const types = {
@@ -28,9 +29,9 @@ const validate = (schema, doc, patchMode) => {
     const docValue = doc[fieldName];
 
     // required trigger
-    if (!patchMode && fieldSchema.required && isEmptyValue(docValue)) { throw new Error(`value of field "${fieldName}" is required`); }
+    if (!patchMode && fieldSchema.required && isEmptyValue(docValue)) { throw new RugoError(`Value of the ${fieldName} field is required.`); }
 
-    if (patchMode && fieldSchema.required && docValue === null) { throw new Error(`value of field "${fieldName}" is required`); }
+    if (patchMode && fieldSchema.required && docValue === null) { throw new RugoError(`Value of the ${fieldName} field is required.`); }
 
     if (patchMode && fieldSchema.required && isEmptyValue(docValue)) { continue; }
 
@@ -39,14 +40,25 @@ const validate = (schema, doc, patchMode) => {
     // not null docValue
     if (!isEmptyValue(value)) {
       const typeHandler = types[fieldSchema.type];
-      value = typeHandler.type(docValue);
+
+      try {
+        value = typeHandler.type(docValue);
+      } catch(err){
+        err.message = `At the ${fieldName} field: ${err.message}`;
+        throw err;
+      }
 
       // triggers
       for (const [triggerName, triggerValue] of Object.entries(fieldSchema)) {
         if (triggerName === 'type') { continue; }
 
         if (typeHandler[triggerName]) {
-          value = typeHandler[triggerName](value, triggerValue, types);
+          try {
+            value = typeHandler[triggerName](value, triggerValue, types);
+          } catch(err){
+            err.message = `At the ${fieldName} field: ${err.message}`;
+            throw err;
+          }
         }
       }
     }

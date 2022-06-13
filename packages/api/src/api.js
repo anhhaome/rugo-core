@@ -14,7 +14,7 @@ const createApi = wrapComposer(async (model, action, ...args) => {
     result.status = res === null ? 404 : 200;
     result.data = res === null ? 'Not found' : res;
   } catch (err) {
-    result.status = 500;
+    result.status = err.status || 500;
     result.data = err.message;
   }
 

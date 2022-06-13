@@ -1,12 +1,12 @@
 <script setup>
 import uniqid from "uniqid";
-import { reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { formatName } from '../utils';
 import { MButton } from "../../lib";
 import * as Inputs from './inputs/index.js';
 
 const props = defineProps(['schema', 'isCreate', 'doc']);
-defineEmits(['save', 'cancel']);
+defineEmits(['save', 'cancel', 'change']);
 
 const fields = reactive([]);
 const form = reactive({});
@@ -25,7 +25,7 @@ const reload = () => {
       schema: props.schema[key]
     });
 
-    form[key] = props.doc ? props.doc[key] : '';
+    form[key] = props.doc ? props.doc[key] : null;
   }
 }
 
@@ -51,12 +51,13 @@ reload();
   <h2 class="text-xl" v-if="props.schema.__name">{{ props.isCreate ? 'Create a new' : 'Edit an existed'}} {{ formatName(props.schema.__name).toLowerCase() }}</h2>
 
   <div v-for="field in fields" :key="field.key">
-    <label class="block mb-2 mt-4 text-gray-600">{{field.name}}</label>
+    <label class="block mb-2 mt-4 text-gray-600 capitalize">{{field.name}}</label>
 
     <component
       :is="getView(field)"
       :schema="field.schema"
       v-model="form[field.name]"
+      @update:modelValue="$emit('change')"
     />
   </div>
 

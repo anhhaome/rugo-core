@@ -15,7 +15,7 @@ describe('Text', () => {
     try {
       Text.type(value)
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a text`);
+      expect(err.message).to.be.equal(`Invalid type. Expected text but got null.`);
       return;
     }
     assert.fail();
@@ -27,7 +27,7 @@ describe('Text', () => {
     try {
       Text.type(value)
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a text`);
+      expect(err.message).to.be.equal(`Invalid type. Expected text but got undefined.`);
       return;
     }
     assert.fail();
@@ -39,7 +39,7 @@ describe('Text', () => {
     try {
       Text.type(value)
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a text`);
+      expect(err.message).to.be.equal(`Invalid type. Expected text but got [object Object].`);
       return;
     }
     assert.fail();
@@ -55,7 +55,7 @@ describe('Text', () => {
     try {
       Text.minlength(text, 10);
     } catch(err){
-      expect(err.message).to.be.equal('"hello" length is lower than 10');
+      expect(err.message).to.be.equal('Wrong data. hello length is lower than 10.');
       return;
     }
     assert.fail();
@@ -71,7 +71,7 @@ describe('Text', () => {
     try {
       Text.maxlength(text, 3);
     } catch(err){
-      expect(err.message).to.be.equal('"hello" length is greater than 3');
+      expect(err.message).to.be.equal('Wrong data. hello length is greater than 3.');
       return;
     }
     assert.fail();
@@ -87,7 +87,7 @@ describe('Text', () => {
     try {
       Text.regex(text, 'he.+llo');
     } catch(err){
-      expect(err.message).to.be.equal('"hello" is not match regex');
+      expect(err.message).to.be.equal('Wrong data. hello is not match regex.');
       return;
     }
     assert.fail();
@@ -111,7 +111,7 @@ describe('Text', () => {
       Text.choice(text, ['foo', 'bar']);
       assert.fail();
     } catch(err){
-      expect(err.message).to.be.equal('"hello" is not valid enum');
+      expect(err.message).to.be.equal('Wrong data. hello is not valid choice.');
     }
   });
 }); 

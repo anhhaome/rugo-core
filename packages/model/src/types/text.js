@@ -1,4 +1,4 @@
-import { InvalidTypeError } from '../exceptions.js';
+import { InvalidTypeError, TriggerError } from '../exceptions.js';
 
 /**
  * Validate text type.
@@ -20,7 +20,7 @@ export const type = (value) => {
  * @returns {string} Validated value.
  */
 export const minlength = (value, schemaValue) => {
-  if (value.length < schemaValue) { throw new Error(`"${value}" length is lower than ${schemaValue}`); }
+  if (value.length < schemaValue) { throw new TriggerError('lower than', `${value} length`, schemaValue); }
   return value;
 };
 
@@ -32,7 +32,7 @@ export const minlength = (value, schemaValue) => {
  * @returns {string} Validated value.
  */
 export const maxlength = (value, schemaValue) => {
-  if (value.length > schemaValue) { throw new Error(`"${value}" length is greater than ${schemaValue}`); }
+  if (value.length > schemaValue) { throw new TriggerError('greater than', `${value} length`, schemaValue); }
   return value;
 };
 
@@ -45,7 +45,7 @@ export const maxlength = (value, schemaValue) => {
  */
 export const regex = (value, schemaValue) => {
   const r = new RegExp(schemaValue);
-  if (!r.test(value)) { throw new Error(`"${value}" is not match regex`); }
+  if (!r.test(value)) { throw new TriggerError('not match', value, 'regex'); }
   return value;
 };
 
@@ -82,7 +82,7 @@ export const uppercase = value => value.toUpperCase();
  */
 export const choice = (value, schemaValue) => {
   if (schemaValue.indexOf(value) === -1) {
-    throw new Error(`"${value}" is not valid enum`);
+    throw new TriggerError('not valid', value, 'choice');
   }
   return value;
 };

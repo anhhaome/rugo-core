@@ -19,7 +19,7 @@ describe('Number', () => {
     try {
       expect(Number.type(null)).to.be.equal(null);
     } catch(err){
-      expect(err.message).to.be.equal(`"null" is not a number`);
+      expect(err.message).to.be.equal(`Invalid type. Expected number but got null.`);
       return;
     }
   });
@@ -30,7 +30,7 @@ describe('Number', () => {
     try {
       Number.type(value)
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a number`);
+      expect(err.message).to.be.equal(`Invalid type. Expected number but got [object Object].`);
       return;
     }
     assert.fail();
@@ -42,7 +42,7 @@ describe('Number', () => {
     try {
       Number.type(value)
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a number`);
+      expect(err.message).to.be.equal(`Invalid type. Expected number but got abc.`);
       return;
     }
     assert.fail();
@@ -58,7 +58,7 @@ describe('Number', () => {
       const value = 3;
       Number.min(value, 10);
     } catch(err){
-      expect(err.message).to.be.equal('"3" is lower than 10');
+      expect(err.message).to.be.equal('Wrong data. 3 is lower than 10.');
       return;
     }
     assert.fail();
@@ -74,7 +74,7 @@ describe('Number', () => {
       const value = 3;
       Number.max(value, 2);
     } catch(err){
-      expect(err.message).to.be.equal('"3" is greater than 2');
+      expect(err.message).to.be.equal('Wrong data. 3 is greater than 2.');
       return;
     }
     assert.fail();

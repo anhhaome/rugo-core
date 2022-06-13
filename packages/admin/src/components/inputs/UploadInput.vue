@@ -105,7 +105,7 @@ onMounted(() => {
       @select="doc => select(doc._id)"
     />
 
-    <MButton v-if="isExpand" class="mx-3 mb-3" variant="danger" @click="select('')">Clear</MButton>
+    <MButton v-if="isExpand" class="mx-3 mb-3" variant="danger" @click="select(null)">Clear</MButton>
   </div>
 </template>
 

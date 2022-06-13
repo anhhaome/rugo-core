@@ -150,13 +150,29 @@ describe('Model test', () => {
   });
 
   describe('Trigger test', () => {
+    it('invalid type error', async () => {
+      const model = await createModel(fakeDriver, DEMO_SCHEMA);
+
+      try {
+        await model.create({
+          name: 'foo',
+          age: 'abc'
+        });
+      } catch(err){
+        expect(err.message).to.be.eq('At the age field: Invalid type. Expected number but got abc.');
+        return;
+      }
+
+      assert.fail('Not throw error when empty required');
+    });
+
     it('should be error when not required', async () => {
       const model = await createModel(fakeDriver, DEMO_SCHEMA);
 
       try {
         await model.create({});
       } catch(err){
-        expect(err.message).to.be.eq('value of field "name" is required');
+        expect(err.message).to.be.eq('Value of the name field is required.');
         return;
       }
 
@@ -170,7 +186,7 @@ describe('Model test', () => {
       try {
         await model.patch(doc._id, { name: null });
       } catch(err){
-        expect(err.message).to.be.eq('value of field "name" is required');
+        expect(err.message).to.be.eq('Value of the name field is required.');
         return;
       }
 
@@ -186,7 +202,7 @@ describe('Model test', () => {
           age: 11
         });
       } catch(err){
-        expect(err.message).to.be.eq('"11" is greater than 10');
+        expect(err.message).to.be.eq('At the age field: Wrong data. 11 is greater than 10.');
         return;
       }
 
@@ -205,7 +221,7 @@ describe('Model test', () => {
         await model.patch(doc._id, { age: 11 });
         assert.fail('not trigger');
       } catch(err){
-        expect(err.message).to.be.eq('"11" is greater than 10');
+        expect(err.message).to.be.eq('At the age field: Wrong data. 11 is greater than 10.');
       }
 
       // $inc
@@ -222,7 +238,7 @@ describe('Model test', () => {
           age: 0
         });
       } catch(err){
-        expect(err.message).to.be.eq('"0" is lower than 1');
+        expect(err.message).to.be.eq('At the age field: Wrong data. 0 is lower than 1.');
         return;
       }
 
@@ -241,7 +257,7 @@ describe('Model test', () => {
         await model.patch(doc._id, { age: 0 });
         assert.fail('not trigger');
       } catch(err){
-        expect(err.message).to.be.eq('"0" is lower than 1');
+        expect(err.message).to.be.eq('At the age field: Wrong data. 0 is lower than 1.');
       }
 
       // $inc

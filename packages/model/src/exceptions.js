@@ -1,11 +1,19 @@
-export class InvalidTypeError extends Error {
-  constructor (value, type) {
-    super(`"${value}" is not a ${type}`);
+export class RugoError extends Error {
+  constructor(message){
+    super(message);
+
+    this.status = 400;
   }
 }
 
-export class TriggerError extends Error {
+export class InvalidTypeError extends RugoError {
+  constructor (value, type) {
+    super(`Invalid type. Expected ${type} but got ${value}.`);
+  }
+}
+
+export class TriggerError extends RugoError {
   constructor (type, value, expect) {
-    super(`"${value}" is ${type} ${expect}`);
+    super(`Wrong data. ${value} is ${type} ${expect}.`);
   }
 }

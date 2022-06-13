@@ -17,7 +17,7 @@ describe('Password', () => {
       expect(Password.type(undefined)).to.be.equal(undefined);
       assert.fail();
     } catch(err){
-      expect(err.message).to.be.eq('"undefined" is not a password');
+      expect(err.message).to.be.eq('Invalid type. Expected password but got undefined.');
     }
 
     // null
@@ -25,7 +25,7 @@ describe('Password', () => {
       expect(Password.type(null)).to.be.equal(null);
       assert.fail();
     } catch(err){
-      expect(err.message).to.be.eq('"null" is not a password');
+      expect(err.message).to.be.eq('Invalid type. Expected password but got null.');
     }
   });
 
@@ -35,7 +35,7 @@ describe('Password', () => {
     try {
       Password.type(value);
     } catch(err){
-      expect(err.message).to.be.equal(`"${value}" is not a password`);
+      expect(err.message).to.be.equal(`Invalid type. Expected password but got [object Object].`);
       return;
     }
     assert.fail();

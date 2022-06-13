@@ -5,9 +5,18 @@ import { expect } from 'chai';
 import { BaseComposer, KoaComposer } from "rugo-common";
 import createApi from '../src/api.js';
 
+class CustomError extends Error {
+  constructor(message){
+    super(message);
+
+    this.status = 400;
+  }
+}
+
 const FakeModel = {
   get(id){ return id; },
   create(){ throw new Error('Test error'); },
+  patch(){ throw new CustomError('Test error'); },
   remove(){ return null; },
 }
 
@@ -48,6 +57,11 @@ describe('Api test', () => {
 
     expect(result).to.has.property('status', 500);
     expect(result).to.has.property('data', 'Test error');
+
+    const result2 = await api(FakeModel, 'patch', 1)();
+
+    expect(result2).to.has.property('status', 400);
+    expect(result2).to.has.property('data', 'Test error');
   });
 });
 
