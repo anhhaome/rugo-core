@@ -4,7 +4,7 @@ import { MInput, MButton } from "../../../lib";
 import { base64url } from "../../utils";
 import FileExplorer from "../FileExplorer.vue";
 
-const props = defineProps(['modelValue', 'schema']);
+const props = defineProps(['modelValue', 'schema', 'hideInput']);
 const emit = defineEmits(['update:modelValue']);
 
 const noti = inject('mnoti');
@@ -85,16 +85,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="upload-input">
+  <div class="upload-input relative">
     <MInput
+      v-if="!hideInput"
       class="upload-input-value my-0 cursor-pointer mx-[-1px] my-[-1px]"
       :disabled="true"
       :modelValue="modelValue"
       @click="toggleExpand"
     />
 
+    <button
+      class="border-2 border-warn-500 text-warn-500 rounded-full w-6 h-6 opacity-50 inline-flex items-center justify-center absolute right-2.5 top-2.5
+      hover:opacity-100"
+      v-if="!hideInput && modelValue && !schema.required && !schema.default"
+      @click="select(null)"
+    >
+      <ion-icon class="text-lg" name="close" />
+    </button>
+
     <FileExplorer
-      v-if="isExpand"
+      class="mx-3 mb-[-1px] mt-4"
+      v-if="isExpand || hideInput"
       mode="select"
       accept="image/*"
       :home="schema.ref"
@@ -104,23 +115,21 @@ onMounted(() => {
       @upload="upload"
       @select="doc => select(doc._id)"
     />
-
-    <MButton v-if="isExpand" class="mx-3 mb-3" variant="danger" @click="select(null)">Clear</MButton>
   </div>
 </template>
 
 <style lang="scss">
 .upload-input {
   @apply relative border rounded-lg;
-
+  
   .upload-input-value:after {
     content: 'Browse';
     
-    @apply border rounded-r-lg h-full top-0 right-0 absolute px-3 inline-flex items-center text-gray-600;
+    @apply w-20 border rounded-l-lg h-full top-0 left-0 absolute px-3 inline-flex items-center text-gray-600;
   }
 
-  .file-explorer {
-    @apply p-3;
+  .upload-input-value input {
+    @apply pl-[5.5rem] pr-12;
   }
 }
 </style>

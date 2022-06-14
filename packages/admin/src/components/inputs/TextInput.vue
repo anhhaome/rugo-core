@@ -1,25 +1,54 @@
 <script setup>
-import { inject } from "vue";
-import { MInput, MRichEditor, MDropdown, MList, MListItem } from "../../../lib";
+import { computed, inject, nextTick, ref } from "vue";
+import { MInput, MRichEditor, MDropdown, MList, MListItem, MDialog } from "../../../lib";
+import UploadInput from "./UploadInput.vue";
 
 const props = defineProps(['label', 'modelValue', 'schema']);
 defineEmits(['update:modelValue']);
 
 const noti = inject('mnoti');
+const dialog = ref(null);
+let quill;
 
-const prepareInsertion = quill => {
+const prepareInsertion = q => {
+  quill = q;
+
   if (!props.schema.upload)
     return noti.push('warn', 'Do not have upload config!');
+
+  dialog.value.show();
 }
+
+const insertImage = filePath => {
+  const baseURL = import.meta.env.ADMIN_API_BASE_URL;
+  dialog.value.hide();
+  
+  quill.focus();
+  nextTick(() => {
+    const selection = quill.getSelection();
+    quill.insertEmbed(selection ? selection.index : 0, 'image', `${baseURL}${filePath}`);
+  });
+}
+
+const valueLength = computed(() => (props.modelValue ? props.modelValue.length : 0) + (props.schema.maxlength !== undefined ? `/${props.schema.maxlength}` : ''));
 </script>
 
 <template>
-  <MRichEditor
-    v-if="schema.editor === 'rich'"
-    :modelValue="modelValue"
-    @update:modelValue="event => $emit('update:modelValue', event)"
-    @insertImage="prepareInsertion"
-  />
+  <div v-if="schema.editor === 'rich'" class="text-input">
+    <MRichEditor
+      :modelValue="modelValue"
+      @update:modelValue="event => $emit('update:modelValue', event)"
+      @insertImage="prepareInsertion"
+    />
+
+    <MDialog :label="false" ref="dialog">
+      <UploadInput
+        :schema="schema.upload"
+        :hideInput="true"
+        @update:modelValue="insertImage"
+      />
+    </MDialog>
+  </div>
 
   <MDropdown
     v-else-if="schema.choice"
@@ -60,10 +89,21 @@ const prepareInsertion = quill => {
     </MList>
   </MDropdown>
   
-  <MInput
-    v-else
-    class="my-0"
-    :modelValue="modelValue"
-    @update:modelValue="event => $emit('update:modelValue', event)"
-  />
+  <div v-else class="relative">
+    <MInput
+      class="my-0"
+      :modelValue="modelValue"
+      @update:modelValue="event => $emit('update:modelValue', event)"
+    />
+
+    <div class="absolute bottom-[-1.25em] right-2 text-[.8em] bg-white p-1 text-gray-400">{{ valueLength }}</div>
+  </div>
 </template>
+
+<style lang="scss">
+.text-input {
+  .m-dialog .m-content-dialog {
+    @apply max-w-2xl;
+  }
+}
+</style>

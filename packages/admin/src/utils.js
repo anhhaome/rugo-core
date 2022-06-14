@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import htmlToText from 'html-to-text';
 import { Buffer } from 'buffer';
 
-const MAX_TEXT_LENGTH = 80;
+const MAX_TEXT_LENGTH = 60;
 
 export const formatName = name => {
   name = pluralize.singular(name);
