@@ -1,6 +1,35 @@
-import { curry } from 'ramda';
+import { clone, curry } from 'ramda';
+import { compile } from 'fundefstr';
+import slugify from 'slugify';
+
 import { COLLECTION, FS_SCHEMA } from './constants.js';
 import validate from './validate.js';
+
+const generateDefault = compile({
+  slugify([value, ...params]){
+    return [slugify(value || '', { strict: true, lower: true }), -1, ...params];
+  },
+
+  counter([value, counter, ...params]){
+    return [value, counter + 1, ...params];
+  },
+
+  async unique([value, counter, collection, field], next, back){
+    let query = {};
+    query[field] = value + (counter === 0 ? '' : `-${counter}`);
+
+    let { total } = await doList(collection, query);
+
+    if (total === 0)
+      next([query[field]])
+    else
+      back([value, counter, collection, field]);
+  },
+
+  async unislug([value, collection, field]){
+    return await generateDefault(`slugify,counter,unique:value,collection,field`, { value, collection, field });
+  }
+});
 
 /**
  * Extract specific name from object.
@@ -75,11 +104,28 @@ const doGet = async (collection, id) => {
  *
  * @async
  * @param {Collection} collection Collection want to handle. Required.
- * @param {Schema} schema Shape of data. Required.
+ * @param {Schema} _schema Shape of data. Required.
  * @param {Document} doc A document to be created. Required.
  * @returns {Document} A created document.
  */
-const doCreate = async (collection, schema, doc) => {
+const doCreate = async (collection, _schema, doc) => {
+  const schema = clone(_schema);
+
+  // default generator
+  for (let key in schema)
+    if (typeof schema[key] === 'object' && schema[key] && schema[key].default){
+      let rel = /^%(.*?)%$/.exec(schema[key].default);
+
+      if (!rel)
+        continue;
+
+      schema[key].default = (await generateDefault(`${rel[1]},__collection,__field`, {
+        ...doc,
+        __collection: collection,
+        __field: key
+      }))[0];
+    }
+
   // validate
   const insertedDoc = validate(schema, doc);
 

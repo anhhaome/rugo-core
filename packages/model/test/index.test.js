@@ -19,6 +19,7 @@ types.upload = {
 const DEMO_SCHEMA = {
   __name: 'demo',
   name: { type: 'text', required: true },
+  slug: { type: 'text', default: '%unislug:name%', editable: false },
   age: { type: 'number', max: 10, min: 1 },
   kind: { type: 'text', default: 'human' },
   avatar: { type: 'upload' }
@@ -52,9 +53,10 @@ describe('Model test', () => {
     it('should create', async () => {
       const model = await createModel(fakeDriver, DEMO_SCHEMA);
 
-      const doc = await model.create({ name: 'foo', avatar: '/cat.png' });
+      const doc = await model.create({ name: 'This is a foo quéstion', avatar: '/cat.png' });
 
-      expect(doc).to.has.property('name', 'foo');
+      expect(doc).to.has.property('name', 'This is a foo quéstion');
+      expect(doc).to.has.property('slug', 'this-is-a-foo-question');
       expect(doc).to.has.property('avatar', '/cat.png');
     });
 
@@ -120,9 +122,13 @@ describe('Model test', () => {
       const model = await createModel(fakeDriver, DEMO_SCHEMA);
 
       const doc = await model.create({ name: 'foo' });
-      const res = await model.patch(doc._id, { name: 'bar' });
+      const res = await model.patch(doc._id, { name: 'bar', slug: 'bar' });
 
       expect(res).to.be.eq(1);
+
+      const doc2 = await model.get(doc._id);
+      expect(doc2).to.has.property('name', 'bar');
+      expect(doc2).to.has.property('slug', 'foo');
     });
 
     it('should patch with null value to remove field', async () => {
@@ -277,5 +283,29 @@ describe('Model test', () => {
       expect(doc).to.has.property('_id');
       expect(doc).to.has.property('name', 'xin-chao.txt');
     });
+  });
+
+  describe('Default function test', () => {
+    it('should not dupplicated slug', async () => {
+      const model = await createModel(fakeDriver, DEMO_SCHEMA);
+  
+      const doc = await model.create({
+        name: 'This is a quéstion'
+      });
+
+      expect(doc).to.has.property('slug', 'this-is-a-question');
+
+      const doc2 = await model.create({
+        name: 'This is a quéstion'
+      });
+
+      expect(doc2).to.has.property('slug', 'this-is-a-question-1');
+
+      const doc3 = await model.create({
+        name: 'This is a quéstion'
+      });
+
+      expect(doc3).to.has.property('slug', 'this-is-a-question-2');
+    }); 
   });
 });

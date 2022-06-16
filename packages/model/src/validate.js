@@ -28,6 +28,9 @@ const validate = (schema, doc, patchMode) => {
   for (const [fieldName, fieldSchema] of Object.entries(schema)) {
     const docValue = doc[fieldName];
 
+    // disable editable
+    if (patchMode && fieldSchema.editable === false) { continue; }
+
     // required trigger
     if (!patchMode && fieldSchema.required && isEmptyValue(docValue)) { throw new RugoError(`Value of the ${fieldName} field is required.`); }
 

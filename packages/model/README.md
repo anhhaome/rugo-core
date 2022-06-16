@@ -46,8 +46,27 @@ await model.remove(id);
 
 ## Common Triggers
 
-- `required`
-- `default`
+### `required`
+
+Required field must be set when create. Default: `false`.
+
+### `default`
+
+Default data if field is not set when create.
+
+**Default functions**
+
+Basic syntax:
+
+- `%<functionName>:<params...>%` params is separated by comma (,).
+
+Defined functions:
+
+- `%unislug:title%` Unique slug
+
+### `editable`
+
+Field can be patch or not. Default: `true`.
 
 ## Types
 
