@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 
 import { COLLECTION } from '../src/constants.js';
 import createFakeDriver from '../src/driver.js';

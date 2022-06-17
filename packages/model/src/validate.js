@@ -32,7 +32,9 @@ const validate = (schema, doc, patchMode) => {
     if (patchMode && fieldSchema.editable === false) { continue; }
 
     // required trigger
-    if (!patchMode && fieldSchema.required && isEmptyValue(docValue)) { throw new RugoError(`Value of the ${fieldName} field is required.`); }
+    if (!patchMode && fieldSchema.required && isEmptyValue(docValue) && fieldSchema.default === undefined) { 
+      throw new RugoError(`Value of the ${fieldName} field is required.`); 
+    }
 
     if (patchMode && fieldSchema.required && docValue === null) { throw new RugoError(`Value of the ${fieldName} field is required.`); }
 

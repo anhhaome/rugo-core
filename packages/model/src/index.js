@@ -7,7 +7,7 @@ import validate from './validate.js';
 
 const generateDefault = compile({
   slugify([value, ...params]){
-    return [slugify(value || '', { strict: true, lower: true }), -1, ...params];
+    return [slugify(value || '', { strict: true, lower: true, locale: 'vi' }), -1, ...params];
   },
 
   counter([value, counter, ...params]){
@@ -130,7 +130,7 @@ const doCreate = async (collection, _schema, doc) => {
   const insertedDoc = validate(schema, doc);
 
   // addition info
-  const now = (new Date()).toString();
+  const now = (new Date()).toISOString();
   insertedDoc.createdAt = now;
   insertedDoc.updatedAt = now;
   insertedDoc.version = 1;
@@ -167,7 +167,7 @@ const doPatch = async (collection, schema, id, doc) => {
   if (Object.keys(unset).length) { controls.$unset = unset; }
 
   // addition info
-  const now = (new Date()).toString();
+  const now = (new Date()).toISOString();
   patchedDoc.updatedAt = now;
   controls.$inc = controls.$inc || {};
   controls.$inc.version = 1;
