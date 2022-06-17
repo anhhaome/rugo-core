@@ -19,6 +19,9 @@ const reload = () => {
     if (key[0] === '_' && key[1] === '_')
       continue;
 
+    if (props.schema[key].hidden)
+      continue;
+
     fields.push({
       key: uniqid(),
       name: key,

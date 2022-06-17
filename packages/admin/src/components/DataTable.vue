@@ -16,6 +16,12 @@ const fields = computed(() => {
     if (key[0] === '_' && key[1] === '_')
       continue;
 
+    if (props.schema[key].hidden)
+      continue;
+
+    if (props.schema[key].preview === false)
+      continue;
+
     result.push(key);
   }
 
@@ -62,9 +68,23 @@ const reload = () => {
 const view = (doc) => {
   currentDoc.value = [
     { key: 'Id', value: doc._id },
-    { key: 'Created At', value: (new Date(doc.createdAt)).toLocaleString('vi-VN') },
-    { key: 'Updated At', value: (new Date(doc.updatedAt)).toLocaleString('vi-VN') }
   ];
+
+  for (let key in props.schema){
+    if (key[0] === '_' && key[1] === '_')
+      continue;
+
+    if (['_id', 'createdAt', 'updatedAt'].indexOf(key) !== -1)
+      continue;
+    
+    currentDoc.value.push({
+      key,
+      value: formatValueWithSchema(doc[key], props.schema[key])
+    });
+  }
+
+  currentDoc.value.push({ key: 'Created At', value: (new Date(doc.createdAt)).toLocaleString('vi-VN') });
+  currentDoc.value.push({ key: 'Updated At', value: (new Date(doc.updatedAt)).toLocaleString('vi-VN') });
 
   viewDialog.value.show();
 }
@@ -147,7 +167,11 @@ watch([
     <div class="wrapper-margin"></div>
 
     <MDialog :label="false" ref="viewDialog">
-      <MTable :data="currentDoc" />
+      <MTable :data="currentDoc">
+        <template #cell()="{ value }">
+          <span v-html="value"></span>
+        </template>
+      </MTable>
     </MDialog>
   </div>
 </template>
@@ -165,8 +189,9 @@ watch([
       table-layout: auto;
 
       th, td {
-        min-width: 10em;
+        min-width: 2em;
         min-height: 2em;
+        white-space: pre-wrap;
       }
 
       th:first-child,
@@ -205,6 +230,17 @@ watch([
   .toolbar {
     .m-button {
 
+    }
+  }
+
+  .m-dialog {
+    table {
+      table-layout: auto;
+      
+      th:first-child,
+      td:first-child {
+        @apply capitalize;
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 <script setup>
+import { RouterView } from "vue-router";
 import { MAuthLayout } from '../../lib';
 import AppLogo from "../components/AppLogo.vue";
 </script>
@@ -8,5 +9,7 @@ import AppLogo from "../components/AppLogo.vue";
     <template #logo>
       <AppLogo size="lg"/>
     </template>
+
+    <RouterView />
   </MAuthLayout>
 </template>

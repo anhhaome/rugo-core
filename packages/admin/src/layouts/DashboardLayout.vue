@@ -1,6 +1,6 @@
 <script setup>
 import { inject, onBeforeMount, reactive, watch } from 'vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, RouterView } from "vue-router";
 
 import { MDashboardLayout } from '../../lib';
 import { useInfoStore } from '../stores/info';
@@ -68,5 +68,7 @@ watch(
     <template #logo>
       <AppLogo :responsive="true" />
     </template>
+
+    <RouterView />
   </MDashboardLayout>
 </template>

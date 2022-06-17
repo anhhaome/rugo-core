@@ -45,6 +45,7 @@
     "uniqid": "^5.4.0",
     "vite": "^2.9.5",
     "vitest": "^0.9.3",
-    "vue-dragscroll": "^3.0.1"
+    "vue-dragscroll": "^3.0.1",
+    "vue-minimal-admin": "./lib"
   }
 }
