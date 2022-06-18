@@ -21,8 +21,13 @@ export default {
     const schemas = JSON.parse(process.env.MODEL_SCHEMAS);
     const models = {};
 
-    const makeModel = async name => {
+    const makeModel = async (name, schema) => {
       if (models[name]) { return models[name]; }
+
+      if (schema){
+        models[name] = await createModel(context.drivers[schema.__type], schema);
+        return models[name];
+      }
 
       for (const schema of schemas) {
         if (schema.__name === name) {
