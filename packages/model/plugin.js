@@ -22,6 +22,10 @@ export default {
     const models = {};
 
     const makeModel = async (name, schema) => {
+      // null check
+      if (!name)
+        return null;
+
       // direct/update schema change
       if (schema){
         models[name] = await createModel(context.drivers[schema.__type], schema);
