@@ -22,13 +22,16 @@ export default {
     const models = {};
 
     const makeModel = async (name, schema) => {
-      if (models[name]) { return models[name]; }
-
+      // direct/update schema change
       if (schema){
         models[name] = await createModel(context.drivers[schema.__type], schema);
         return models[name];
       }
 
+      // cached
+      if (models[name]) { return models[name]; }
+
+      // defined in env
       for (const schema of schemas) {
         if (schema.__name === name) {
           models[name] = await createModel(context.drivers[schema.__type], schema);
