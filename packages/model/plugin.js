@@ -28,7 +28,11 @@ export default {
 
       // direct/update schema change
       if (schema){
-        models[name] = await createModel(context.drivers[schema.__type], schema);
+        models[name] = await createModel(context.drivers[schema.__type], {
+          ...schema,
+          __name: name
+        });
+        
         return models[name];
       }
 
@@ -38,7 +42,11 @@ export default {
       // defined in env
       for (const schema of schemas) {
         if (schema.__name === name) {
-          models[name] = await createModel(context.drivers[schema.__type], schema);
+          models[name] = await createModel(context.drivers[schema.__type], {
+            ...schema,
+            __name: name
+          });
+          
           return models[name];
         }
       }
