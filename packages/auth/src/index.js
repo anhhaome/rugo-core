@@ -91,7 +91,7 @@ export const createGate = wrapComposer(async (secret, model, disabled, token, co
 
   if (!user) { return forbidden('Access denied'); }
 
-  context.user = user;
+  context.rugoUser = user;
 
   return null;
 });
