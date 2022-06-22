@@ -1,15 +1,19 @@
-import { fileURLToPath, URL } from 'url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+
+const base = process.env.BASE || ''
 
 // https://vitejs.dev/config/
 export default defineConfig({
   envPrefix: 'ADMIN_',
-  base: '/admin/',
+  base: `/${base}`,
   
   server: {
     port: 8080
+  },
+
+  build: {
+    outDir: `dist/${base}`
   },
 
   plugins: [
