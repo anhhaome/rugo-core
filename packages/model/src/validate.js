@@ -66,6 +66,16 @@ const validate = (schema, doc, patchMode) => {
           }
         }
       }
+
+      // nested schema
+      if (fieldSchema.schema){
+        try {
+          value = validate(fieldSchema.schema, value, patchMode);
+        } catch(err){
+          err.message = `At the ${fieldName} field: ${err.message}`;
+          throw err;
+        }
+      }
     }
 
     // not null value
