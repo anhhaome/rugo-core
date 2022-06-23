@@ -1,6 +1,6 @@
-[submodule "packages/admin/lib"]
-	path = packages/admin/lib
-	url = git@github.com:anhhaome/vue-minimal-admin.git
 [submodule "packages/view/lib"]
 	path = packages/view/lib
 	url = git@github.com:haova/taile.js.git
+[submodule "packages/admin"]
+	path = packages/admin
+	url = git@github.com:rugo-vn/admin.git
