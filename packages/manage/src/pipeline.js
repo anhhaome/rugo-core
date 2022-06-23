@@ -83,12 +83,30 @@ const createPipeline = (pipeline, context = {}, stats = {}) => {
   // clone and sort by priority
   const _pipeline = sortBy(prop('priority'), clone(pipeline));
 
+  context.onStarted = [];
+  context.onClosed = [];
+
   return {
     context,
     stats,
 
-    async start () { return await startPipeline(_pipeline, context, stats); },
-    async close () { return await closePipeline(_pipeline, context, stats); }
+    async start () { 
+      const result = await startPipeline(_pipeline, context, stats); 
+
+      for (let fn of context.onStarted)
+        await fn(context);
+
+      return result;
+    },
+    
+    async close () {
+      const result = await closePipeline(_pipeline, context, stats); 
+
+      for (let fn of context.onClosed)
+        await fn(context);
+
+      return result;
+    }
   };
 };
 export default createPipeline;

@@ -14,7 +14,7 @@ import bcrypt from 'bcryptjs';
  * @param {*} data Message or data to response.
  * @returns {Result} return data.
  */
-const forbidden = (data) => ({
+export const forbidden = (data) => ({
   status: 403,
   data
 });
@@ -25,7 +25,7 @@ const forbidden = (data) => ({
  * @param {*} data Message or data to response.
  * @returns {Result} return data.
  */
-const badRequest = (data) => ({
+export const badRequest = (data) => ({
   status: 400,
   data
 });
@@ -60,7 +60,7 @@ export const createLogin = wrapComposer(async (secret, model, form) => {
  * @param {string} secret secret of token
  * @returns {object} return object or false
  */
-const verifyToken = (token, secret) => {
+export const verifyToken = (token, secret) => {
   try {
     return jwt.verify(token, secret);
   } catch (err) {
@@ -91,7 +91,7 @@ export const createGate = wrapComposer(async (secret, model, disabled, token, co
 
   if (!user) { return forbidden('Access denied'); }
 
-  context.user = user;
+  context.rugoUser = user;
 
   return null;
 });
