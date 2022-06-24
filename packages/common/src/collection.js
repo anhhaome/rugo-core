@@ -173,6 +173,8 @@ const doRemove = async (data, query) => {
  * @property {Function} create Create a new document.
  * @property {Function} patch Update existed documents.
  * @property {Function} remove Remove documents.
+ * @property {Function} import Import documents.
+ * @property {Function} export Export documents.
  */
 export const EmptyCollection = ({
   id () {},
@@ -181,7 +183,9 @@ export const EmptyCollection = ({
   list () {},
   create () {},
   patch () {},
-  remove () {}
+  remove () {},
+  import() {},
+  export() {}
 });
 
 export const BaseCollection = ({

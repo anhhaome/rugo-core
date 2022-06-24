@@ -1,5 +1,8 @@
 import fs from 'fs';
-import { join, parse } from 'path';
+import util from 'node:util';
+import { dirname, join, parse, basename } from 'path';
+import { exec as _exec } from 'node:child_process';
+
 import { compose, curry, curryN, map, prop } from 'ramda';
 import base64url from 'base64url';
 import Mime from 'mime';
@@ -7,6 +10,10 @@ import { EmptyCollection, generateId, FileData } from 'rugo-common';
 
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
+import log from './log.js';
+import rimraf from 'rimraf';
+
+const exec = util.promisify(_exec);
 
 /**
  * Encode path to id (base64url)
@@ -213,6 +220,37 @@ const doRemove = async (root, query) => {
   return 1;
 };
 
+const doExport = async (root) => {
+  const outputPath = `/tmp/rugo.${CACHE_FS_KEY}.${generateId()}.zip`;
+
+  /* const { stdout, stderr } = */
+  await exec(`zip -r "${outputPath}" .`, {
+    cwd: root
+  });
+
+  // stdout.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+  // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+
+  return outputPath;
+}
+
+const doImport = async (root, filePath) => {
+  if (fs.existsSync(root))
+    rimraf.sync(root);
+
+  fs.mkdirSync(root);
+    
+  /* const { stdout, stderr } = */
+  await exec(`unzip "${filePath}"`, {
+    cwd: root
+  });
+
+  // stdout.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+  // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+
+  return true;
+}
+
 /**
  * Get collection for data processing.
  *
@@ -233,7 +271,10 @@ const getCollection = async (root, name) => {
     count: curry(doCount)(collectionRoot),
     list: curryN(2, doList)(collectionRoot),
     patch: curryN(2, doPatch)(collectionRoot),
-    remove: curry(doRemove)(collectionRoot)
+    remove: curry(doRemove)(collectionRoot),
+
+    export: async () => await doExport(collectionRoot),
+    import: curry(doImport)(collectionRoot)
   };
 };
 

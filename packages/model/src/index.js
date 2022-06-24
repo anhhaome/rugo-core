@@ -239,7 +239,10 @@ const createModel = async (driver, rawSchema) => {
     get: curry(doGet)(collection),
     create: curry(doCreate)(collection, schema),
     patch: curry(doPatch)(collection, schema),
-    remove: curry(doRemove)(collection)
+    remove: curry(doRemove)(collection),
+
+    import: collection.import,
+    export: collection.export
   };
 };
 export default createModel;

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 import { expect } from 'chai';
 import rimraf from 'rimraf';
-import { DEFAULT_LIMIT } from 'rugo-common';
+import { DEFAULT_LIMIT, FileData } from 'rugo-common';
 
 import createMemDriver from '../src/mem.js';
 import { globalCaches } from '../src/memoize.js';
@@ -206,5 +206,22 @@ describe('Mem Driver test', () => {
     expect(no).to.be.eq(Math.round(SAMPLE_MAX/2));
     for (let doc of result.data)
       expect(doc).to.has.property('gender', 'female');
+  });
+
+  it('should export and import', async () => {
+    // init
+    const collection = await driver.getCollection(DEMO_COLLECTION_NAME);
+    await collection.create(SAMPLE_DOCUMENT);
+
+    // export
+    const filePath = await collection.export();
+    const exportedFilePath = join(root, 'exported.json');
+    await FileData(filePath).copyTo(exportedFilePath);
+    await collection.create(SAMPLE_DOCUMENT);
+    
+    // import
+    await collection.import(exportedFilePath);
+    const result = await collection.list({});
+    expect(result).to.has.property('total', 1);
   });
 });

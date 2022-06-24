@@ -3,6 +3,7 @@ import colors from 'colors';
 import { resolve } from 'path';
 import { BasePlugin } from 'rugo-common';
 import { createFsDriver, createMemDriver, createMongoDriver } from './src/index.js';
+import log from './src/log.js';
 
 export default {
   ...BasePlugin,
@@ -18,7 +19,9 @@ export default {
       mongo: DRIVER_URI ? await createMongoDriver({ uri: DRIVER_URI, cache: true }) : null
     };
 
-    for (const key in context.drivers) { console.log(colors.yellow('[driver] ') + colors.white(`"${key}" driver is `) + (context.drivers[key] ? colors.green('ready') : colors.red('not ready'))); }
+    for (const key in context.drivers) {
+      log(colors.white(`"${key}" driver is `) + (context.drivers[key] ? colors.green('ready') : colors.red('not ready')));
+    }
   },
   async close (context) {
     for (const driverName in context.drivers) {

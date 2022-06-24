@@ -1,11 +1,16 @@
 import { join } from 'path';
+import util from 'node:util';
+import { exec as _exec } from 'node:child_process';
 
 import { clone, curry, curryN, identity, prop } from 'ramda';
 import { ObjectId, MongoClient } from 'mongodb';
-import { DEFAULT_LIMIT, EmptyCollection } from 'rugo-common';
+import { DEFAULT_LIMIT, EmptyCollection, generateId } from 'rugo-common';
 
 import { CACHE_MONGO_KEY, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
+// import log from './log.js';
+
+const exec = util.promisify(_exec);
 
 /**
  * Get MongoDB instance.
@@ -23,6 +28,7 @@ const getDatabase = async (uri) => {
       }
 
       const client = _client;
+      // log('connected to mongodb server');
 
       resolve(client);
     });
@@ -142,6 +148,27 @@ const doRemove = async (collection, query) => {
   return res.deletedCount;
 };
 
+const doExport = async (uri, name) => {
+  const outputPath = `/tmp/rugo.${CACHE_MONGO_KEY}.${generateId()}.json`;
+  /* const {stdout, stderr} = */
+  await exec(`mongoexport --uri="${uri}" --collection="${name}" --out="${outputPath}"`);
+
+  // stdout.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+  // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+
+  return outputPath;
+}
+
+const doImport = async (uri, name, filePath) => {
+  /* const {stdout, stderr} = */
+  await exec(`mongoimport --uri="${uri}" --collection="${name}" --file="${filePath}" --drop`);
+  
+  // stdout.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+  // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+
+  return true;
+}
+
 /**
  * Get collection for data processing.
  *
@@ -149,7 +176,7 @@ const doRemove = async (collection, query) => {
  * @param {string} name Collection name. Required.
  * @returns {Collection} Collection handlers.
  */
-const getCollection = ({ db }, name) => {
+const getCollection = ({ db, uri }, name) => {
   const collection = db.collection(name);
 
   return {
@@ -161,7 +188,10 @@ const getCollection = ({ db }, name) => {
     count: curry(doCount)(collection),
     list: curryN(2, doList)(collection),
     patch: curryN(2, doPatch)(collection),
-    remove: curry(doRemove)(collection)
+    remove: curry(doRemove)(collection),
+
+    export: async () => await doExport(uri, name),
+    import: curry(doImport)(uri, name)
   };
 };
 const memoizedGetCollection = createMemoizeWith(CACHE_MONGO_KEY, ({ uri }, ...args) => join(uri, ...args), getCollection);

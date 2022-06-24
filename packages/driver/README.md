@@ -2,6 +2,10 @@
 
 Rugo Drivers for contact with databases, filesystems.
 
+## Requirements
+
+You must have [MongoDB Tools](https://www.mongodb.com/docs/database-tools/installation/installation/) installed to use `import/export` with mongo driver.
+
 ## Usage
 
 ### Create Drivers

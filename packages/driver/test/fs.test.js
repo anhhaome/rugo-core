@@ -262,4 +262,31 @@ describe('Mem Driver test', () => {
     const res2 = await collection.remove({ _id: 'nofile' });
     expect(res2).to.be.eq(0);
   });
+
+  it('should export and import', async () => {
+    const collection = await driver.getCollection(DEMO_COLLECTION_NAME);
+
+    // create data
+    await collection.create({
+      name: 'xin-chao.txt'
+    });
+    const doc2 = await collection.create({ name: 'foo', mime: DIRECTORY_MIME });
+    await collection.create({
+      name: 'xin-chao.txt',
+      parent: doc2._id,
+      data: FileData('./package.json')
+    });
+    await collection.create({});
+
+    // export
+    const filePath = await collection.export();
+    const exportedFilePath = join(root, 'exported.zip');
+    await FileData(filePath).copyTo(exportedFilePath);
+    await collection.create({});
+
+    // import
+    await collection.import(exportedFilePath);
+    const result = await collection.list({});
+    expect(result).to.has.property('total', 3);
+  });
 });
