@@ -1,12 +1,18 @@
 /* eslint-disable */
 
-import { join } from 'path';
+import fs from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import rimraf from 'rimraf';
 import { expect } from 'chai';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { CACHE_MONGO_KEY, DRIVER } from '../src/constants.js';
 import { globalCaches } from '../src/memoize.js';
 import createMongoDriver from '../src/mongo.js';
-import { DEFAULT_LIMIT } from 'rugo-common';
+import { DEFAULT_LIMIT, FileData } from 'rugo-common';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DEMO_COLLECTION_NAME = 'demo';
 const SAMPLE_DOCUMENT = { foo: 'bar' };
@@ -14,8 +20,14 @@ const SAMPLE_MAX = 15;
 
 describe('Mongo Driver test', () => {
   let mongod, driver, uri;
+  const root = join(__dirname, '.cache');
 
   beforeEach(async () => {
+    if (fs.existsSync(root))
+      rimraf.sync(root);
+
+    fs.mkdirSync(root, { recursive: true });
+
     mongod = await MongoMemoryServer.create();
     uri = mongod.getUri();
 
@@ -23,6 +35,9 @@ describe('Mongo Driver test', () => {
   });
 
   afterEach(async () => {
+    if (fs.existsSync(root))
+      rimraf.sync(root);
+
     await mongod.stop();
     await driver.close();
   });
@@ -193,5 +208,22 @@ describe('Mongo Driver test', () => {
     expect(no).to.be.eq(Math.round(SAMPLE_MAX/2));
     for (let doc of result.data)
       expect(doc).to.has.property('gender', 'female');
+  });
+
+  it('should export and import', async () => {
+    // init
+    const collection = await driver.getCollection(DEMO_COLLECTION_NAME);
+    await collection.create(SAMPLE_DOCUMENT);
+
+    // export
+    const filePath = await collection.export();
+    const exportedFilePath = join(root, 'exported.json');
+    await FileData(filePath).copyTo(exportedFilePath);
+    await collection.create(SAMPLE_DOCUMENT);
+    
+    // import
+    await collection.import(exportedFilePath);
+    const result = await collection.list({});
+    expect(result).to.has.property('total', 1);
   });
 });

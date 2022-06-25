@@ -10,7 +10,7 @@ import createFsDriver from '../src/fs.js';
 import { globalCaches } from '../src/memoize.js';
 import { expect } from 'chai';
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from '../src/constants.js';
-import { FileData } from 'rugo-common';
+import { FileData, exec } from 'rugo-common';
 import base64url from 'base64url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -261,5 +261,32 @@ describe('Mem Driver test', () => {
     // non-existed
     const res2 = await collection.remove({ _id: 'nofile' });
     expect(res2).to.be.eq(0);
+  });
+
+  it('should export and import', async () => {
+    const collection = await driver.getCollection(DEMO_COLLECTION_NAME);
+
+    // create data
+    await collection.create({
+      name: 'xin-chao.txt'
+    });
+    const doc2 = await collection.create({ name: 'foo', mime: DIRECTORY_MIME });
+    await collection.create({
+      name: 'xin-chao.txt',
+      parent: doc2._id,
+      data: FileData('./package.json')
+    });
+    await collection.create({});
+
+    // export
+    const dirPath = await collection.export();
+    const exportedDirPath = join(root, 'exported');
+    await exec(`cp -rL "${dirPath}" "${exportedDirPath}"`);
+    await collection.create({});
+
+    // import
+    await collection.import(exportedDirPath);
+    const result = await collection.list({});
+    expect(result).to.has.property('total', 3);
   });
 });

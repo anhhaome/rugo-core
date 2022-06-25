@@ -30,5 +30,7 @@ export const COLLECTION = {
   list () {},
   create () {},
   patch () {},
-  remove () {}
+  remove () {},
+  import () {},
+  export () {}
 };

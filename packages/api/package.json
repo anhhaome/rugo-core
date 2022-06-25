@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "moment": "^2.29.3",
     "object-path": "^0.11.8",
     "ramda": "^0.28.0",
     "rugo-common": "../common"

@@ -1,4 +1,5 @@
 import { join } from 'path';
+import fs from 'fs';
 
 import { Low, JSONFile } from 'lowdb';
 import { curry, prop, curryN } from 'ramda';
@@ -79,6 +80,12 @@ const doRemove = async (db, query) => {
   return result;
 };
 
+const doImport = async (db, filePath) => {
+  db.data = JSON.parse(fs.readFileSync(filePath).toString());
+  await db.write();
+  return true;
+}
+
 /**
  * Get collection for data processing. Each collection is stored with one file.
  *
@@ -106,7 +113,10 @@ const getCollection = async (root, name) => {
     count: curry(doCount)(db),
     list: curryN(2, doList)(db),
     patch: curryN(2, doPatch)(db),
-    remove: curry(doRemove)(db)
+    remove: curry(doRemove)(db),
+
+    export: () => file,
+    import: curry(doImport)(db)
   };
 };
 

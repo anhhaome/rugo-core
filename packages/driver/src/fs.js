@@ -1,12 +1,15 @@
 import fs from 'fs';
 import { join, parse } from 'path';
+
 import { compose, curry, curryN, map, prop } from 'ramda';
 import base64url from 'base64url';
 import Mime from 'mime';
-import { EmptyCollection, generateId, FileData } from 'rugo-common';
+import { EmptyCollection, generateId, FileData, exec } from 'rugo-common';
 
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
+import log from './log.js';
+import rimraf from 'rimraf';
 
 /**
  * Encode path to id (base64url)
@@ -213,6 +216,19 @@ const doRemove = async (root, query) => {
   return 1;
 };
 
+const doImport = async (root, dirPath) => {
+  if (fs.existsSync(root))
+    rimraf.sync(root);
+    
+  // const { stdout, stderr } = 
+  await exec(`cp -rL "${dirPath}" "${root}"`);
+
+  // stdout.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+  // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(log);
+
+  return true;
+}
+
 /**
  * Get collection for data processing.
  *
@@ -233,7 +249,10 @@ const getCollection = async (root, name) => {
     count: curry(doCount)(collectionRoot),
     list: curryN(2, doList)(collectionRoot),
     patch: curryN(2, doPatch)(collectionRoot),
-    remove: curry(doRemove)(collectionRoot)
+    remove: curry(doRemove)(collectionRoot),
+
+    export: () => collectionRoot,
+    import: curry(doImport)(collectionRoot)
   };
 };
 
