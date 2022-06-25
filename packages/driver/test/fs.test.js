@@ -10,7 +10,7 @@ import createFsDriver from '../src/fs.js';
 import { globalCaches } from '../src/memoize.js';
 import { expect } from 'chai';
 import { CACHE_FS_KEY, DIRECTORY_MIME, DRIVER } from '../src/constants.js';
-import { FileData } from 'rugo-common';
+import { FileData, exec } from 'rugo-common';
 import base64url from 'base64url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -279,13 +279,13 @@ describe('Mem Driver test', () => {
     await collection.create({});
 
     // export
-    const filePath = await collection.export();
-    const exportedFilePath = join(root, 'exported.zip');
-    await FileData(filePath).copyTo(exportedFilePath);
+    const dirPath = await collection.export();
+    const exportedDirPath = join(root, 'exported');
+    await exec(`cp -rL "${dirPath}" "${exportedDirPath}"`);
     await collection.create({});
 
     // import
-    await collection.import(exportedFilePath);
+    await collection.import(exportedDirPath);
     const result = await collection.list({});
     expect(result).to.has.property('total', 3);
   });

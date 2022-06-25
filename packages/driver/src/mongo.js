@@ -1,16 +1,12 @@
 import { join } from 'path';
-import util from 'node:util';
-import { exec as _exec } from 'node:child_process';
 
 import { clone, curry, curryN, identity, prop } from 'ramda';
 import { ObjectId, MongoClient } from 'mongodb';
-import { DEFAULT_LIMIT, EmptyCollection, generateId } from 'rugo-common';
+import { DEFAULT_LIMIT, EmptyCollection, generateId, exec } from 'rugo-common';
 
 import { CACHE_MONGO_KEY, DRIVER } from './constants.js';
 import createMemoizeWith from './memoize.js';
-// import log from './log.js';
-
-const exec = util.promisify(_exec);
+import log from './log.js';
 
 /**
  * Get MongoDB instance.
