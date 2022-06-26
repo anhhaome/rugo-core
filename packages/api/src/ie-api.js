@@ -17,7 +17,7 @@ export const exportApi = async (name, schemas, createModel) => {
   await mkdir(root);
 
   for (let schema of schemas){
-    let model = await createModel(schema.__name);
+    let model = await createModel(schema.__name, schema);
     let thePath = await model.export();
     let schemaPath = join(root, schema.__name);
 
@@ -53,7 +53,7 @@ export const importApi = async (schemas, createModel, filePath) => {
   // stderr.split('\n').map(i => i.trim()).filter(i => i).forEach(console.log);
 
   for (let schema of schemas){
-    let model = await createModel(schema.__name);
+    let model = await createModel(schema.__name, schema);
     let schemaPath = join(root, schema.__name);
     await model.import(schemaPath);
   }
